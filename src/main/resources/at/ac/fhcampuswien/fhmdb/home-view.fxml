@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="331.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.fhmdb.HomeController">
+   <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="347.0" spacing="20.0" style="-fx-background-color: black;">
+      <padding>
+         <Insets bottom="7.0" left="10.0" top="7.0" />
+      </padding>
+      <children>
+         <Label style="-fx-background-color: F5C518;" text="FHMDb">
+            <font>
+               <Font name="Calibri Bold" size="24.0" />
+            </font>
+            <padding>
+               <Insets left="2.0" right="2.0" />
+            </padding>
+         </Label>
+         <Label styleClass="text-white" stylesheets="@styles.css" text="Welcome to FHMDb!" />
+      </children>
+   </HBox>
+   <HBox spacing="5.0" styleClass="background-black" stylesheets="@styles.css">
+      <children>
+         <JFXButton fx:id="sortBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Sort (asc)" />
+         <TextField fx:id="searchField" prefHeight="25.0" prefWidth="170.0" promptText="Search FHMDb" />
+         <JFXComboBox fx:id="genreComboBox" focusColor="#f5c518" styleClass="filter-combo-box" stylesheets="@styles.css" />
+         <JFXButton fx:id="searchBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Filter" />
+      </children>
+      <VBox.margin>
+         <Insets />
+      </VBox.margin>
+      <padding>
+         <Insets bottom="20.0" left="10.0" top="20.0" />
+      </padding>
+   </HBox>
+   <JFXListView fx:id="movieListView" styleClass="background-black" style="-fx-background-color: black;" stylesheets="@styles.css" VBox.vgrow="ALWAYS" />
+</VBox>

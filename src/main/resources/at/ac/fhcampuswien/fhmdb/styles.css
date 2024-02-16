@@ -1,0 +1,40 @@
+
+.background-yellow {
+    -fx-background-color: #f5c518;
+}
+
+.background-black {
+    -fx-background-color: #000000;
+}
+
+.background-light-black {
+    -fx-background-color: #454545;
+}
+
+.text-yellow {
+    -fx-text-fill: #f5c518;
+}
+
+.text-white {
+    -fx-text-fill: #ffffff;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.movie-cell {
+    -fx-background-color: black;
+    -fx-padding: 2;
+}
+
+.filter-combo-box {
+    -fx-background-color: white;
+    -fx-text-fill: #ffffff;
+}
