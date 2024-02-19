@@ -55,6 +55,7 @@ public class HomeController implements Initializable {
 
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
+            // TODO testing for correct sorting
             if(sortBtn.getText().equals("Sort (asc)")) {
                 observableMovies.sort(movieComparator);
                 sortBtn.setText("Sort (desc)");

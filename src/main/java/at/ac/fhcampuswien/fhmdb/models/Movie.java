@@ -30,6 +30,7 @@ public class Movie {
     public List<Genre> getGenres() { return genres; }
 
     public String getGenresAsString() {
+        // TODO testing
         StringBuilder sb = new StringBuilder();
         for(Genre genre : getGenres()){
             sb.append(genre.toString().toUpperCase());
