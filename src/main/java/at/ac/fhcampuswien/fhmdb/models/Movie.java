@@ -30,13 +30,14 @@ public class Movie {
     public List<Genre> getGenres() { return genres; }
 
     public String getGenresAsString() {
-        // TODO testing
+        if (getGenres().isEmpty())
+            return "";
         StringBuilder sb = new StringBuilder();
         for(Genre genre : getGenres()){
             sb.append(genre.toString().toUpperCase());
             sb.append(", ");
         }
-        sb.delete(sb.length() - 2, sb.length() - 1);
+        sb.delete(sb.length() - 2, sb.length());
         return sb.toString();
     }
 
