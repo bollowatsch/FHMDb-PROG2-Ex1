@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Movie {
+
+
     public enum Genre{
         ACTION, ADVENTURE, ANIMATION, BIOGRAPHY, COMEDY, CRIME, DRAMA, DOCUMENTARY, FAMILY, FANTASY, HISTORY, HORROR, MUSICAL, MYSTERY, ROMANCE, SCIENCE_FICTION, SPORT, THRILLER, WAR,WESTERN
     }
@@ -26,6 +28,11 @@ public class Movie {
         return description;
     }
     public List<Genre> getGenres() { return genres; }
+
+    public String getGenresAsString() {
+        //TODO parse gernes into single string
+        return "test";
+    }
 
     public static List<Movie> initializeMovies(){
         List<Movie> movies = new ArrayList<>();
