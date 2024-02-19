@@ -30,8 +30,13 @@ public class Movie {
     public List<Genre> getGenres() { return genres; }
 
     public String getGenresAsString() {
-        //TODO parse gernes into single string
-        return "test";
+        StringBuilder sb = new StringBuilder();
+        for(Genre genre : getGenres()){
+            sb.append(genre.toString().toUpperCase());
+            sb.append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length() - 1);
+        return sb.toString();
     }
 
     public static List<Movie> initializeMovies(){
