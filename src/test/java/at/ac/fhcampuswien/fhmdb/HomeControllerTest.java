@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HomeControllerTest {
 
     @Test
-    public void sort_empty_MovieList_returns_empty_List() {
+    public void test_sort_empty_MovieList_returns_empty_List() {
         // given
         ObservableList<Movie> movieObservableList = FXCollections.observableArrayList();
         HomeController hc = new HomeController();
@@ -28,7 +28,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void sort_multiple_values_MovieList_ascending() {
+    public void test_sort_multiple_values_MovieList_ascending() {
         // given
         ObservableList<Movie> actual = FXCollections.observableArrayList(new Movie("A"), new Movie("C"), new Movie("B"));
 
@@ -42,7 +42,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void sort_multiple_values_MovieList_descending() {
+    public void test_sort_multiple_values_MovieList_descending() {
         // given
         ObservableList<Movie> actual = FXCollections.observableArrayList(new Movie("A"), new Movie("C"), new Movie("B"));
 
@@ -56,7 +56,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void sort_single_value_MovieList_ascending_returns_single_value_list() {
+    public void test_sort_single_value_MovieList_ascending_returns_single_value_list() {
         // given
         ObservableList<Movie> actual = FXCollections.observableArrayList(new Movie("B"));
 
@@ -69,7 +69,7 @@ public class HomeControllerTest {
         assertEquals(actual, expected);
     }
     @Test
-    public void sort_single_value_MovieList_descending_returns_single_value_list() {
+    public void test_sort_single_value_MovieList_descending_returns_single_value_list() {
         // given
         ObservableList<Movie> actual = FXCollections.observableArrayList(new Movie("A"));
 
