@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MovieTest {
     @Test
     public void movie_without_genres_returns_empty_string_for_UI(){
-        Movie movieWithoutGenres = new Movie("", "", new ArrayList<Movie.Genre>());
+        Movie movieWithoutGenres = new Movie("", "", new ArrayList<>());
 
         String expected = "";
         String actual = movieWithoutGenres.getGenresAsString();
