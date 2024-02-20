@@ -1,9 +1,6 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Movie {
 
@@ -20,6 +17,12 @@ public class Movie {
         this.description = description;
         this.genres = genres;
         genres.sort(Comparator.comparing(Genre::name));
+    }
+
+    public Movie (String title){
+        this.title = title;
+        this.description = "";
+        this.genres = new ArrayList<Genre>();
     }
 
     public String getTitle() {
@@ -41,6 +44,18 @@ public class Movie {
         }
         sb.delete(sb.length() - 2, sb.length());
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Movie)){
+            return false;
+        }
+        Movie m = (Movie) o;
+        return m.title.equals(this.title);
     }
 
     public static List<Movie> initializeMovies(){

@@ -35,7 +35,7 @@ public class HomeController implements Initializable {
 
     public List<Movie> allMovies = Movie.initializeMovies();
 
-    private final ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+    private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -48,24 +48,38 @@ public class HomeController implements Initializable {
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Movie.Genre.values());
 
-        Comparator<? super Movie> movieComparator = Comparator.comparing(Movie::getTitle);
-
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
 
         // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
-            // TODO testing for correct sorting
             if(sortBtn.getText().equals("Sort (asc)")) {
-                observableMovies.sort(movieComparator);
-                sortBtn.setText("Sort (desc)");
+                observableMovies = sortAscendingByTitle(observableMovies);
             } else {
-                observableMovies.sort(movieComparator);
-                Collections.reverse(observableMovies);
-                sortBtn.setText("Sort (asc)");
+                observableMovies = sortDescendingByTitle(observableMovies);
             }
         });
 
 
+    }
+
+    Comparator<? super Movie> movieComparator = Comparator.comparing(Movie::getTitle);
+    public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies){
+        observableMovies.sort(movieComparator);
+        setSortBtnText("Sort (desc)");
+        return observableMovies;
+    }
+
+    public ObservableList<Movie> sortDescendingByTitle(ObservableList<Movie> observableMovies){
+        observableMovies.sort(movieComparator);
+        Collections.reverse(observableMovies);
+        setSortBtnText("Sort (asc)");
+        return observableMovies;
+    }
+
+    public void setSortBtnText(String text){
+        if (sortBtn != null){
+            sortBtn.setText(text);
+        }
     }
 }
