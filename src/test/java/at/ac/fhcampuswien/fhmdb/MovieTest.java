@@ -1,11 +1,13 @@
+package at.ac.fhcampuswien.fhmdb;
+
 import at.ac.fhcampuswien.fhmdb.models.Movie;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class MovieTest {
+public class MovieTest {
     @Test
     public void test_get_genres_as_string_no_genres(){
         Movie movieWithoutGenres = new Movie("", "", new ArrayList<Movie.Genre>());
