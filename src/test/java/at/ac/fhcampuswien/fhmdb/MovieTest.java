@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MovieTest {
     @Test
-    public void test_get_genres_as_string_no_genres(){
+    public void movie_without_genres_returns_empty_string_for_UI(){
         Movie movieWithoutGenres = new Movie("", "", new ArrayList<Movie.Genre>());
 
         String expected = "";
@@ -19,7 +19,7 @@ public class MovieTest {
     }
 
     @Test
-    public void test_get_genres_as_string_single_genre(){
+    public void movie_with_one_genre_returns_genre_as_string_for_UI(){
         ArrayList<Movie.Genre> singleGenreList = new ArrayList<>();
         singleGenreList.add(Movie.Genre.ADVENTURE);
         Movie movieWithSingleGenre = new Movie("","", singleGenreList);
@@ -31,7 +31,7 @@ public class MovieTest {
     }
 
     @Test
-    public void test_get_genres_as_string_multiple_genres(){
+    public void movie_with_multiple_genres_returns_comma_and_space_separated_string_for_UI(){
         ArrayList<Movie.Genre> singleGenreList = new ArrayList<>();
         singleGenreList.add(Movie.Genre.ADVENTURE);
         singleGenreList.add(Movie.Genre.DRAMA);
