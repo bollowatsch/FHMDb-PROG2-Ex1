@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -46,6 +47,7 @@ public class HomeController implements Initializable {
         // initialize UI stuff
         movieListView.setItems(observableMovies);   // set data of observable list to list view
         movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
+        movieListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Genre.values());
@@ -63,22 +65,46 @@ public class HomeController implements Initializable {
         });
 
         searchBtn.setOnAction(actionEvent -> {
-            try {
-                if (genreComboBox.getValue().toString() != null) {
-                    Genre genre = Genre.valueOf(genreComboBox.getValue().toString());
-                    movieListView.setItems(sortByGenre(observableMovies, genre));
+            //TODO: Correct display of list filtered by query
+
+            if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
+                movieListView.setItems(filterByGenreAndQuery(observableMovies, Genre.valueOf(genreComboBox.getValue().toString()), searchField.toString()));
+            } else {
+                if (!searchField.getText().isBlank()) {
+                    movieListView.setItems(filterByQuery(observableMovies, searchField.getText()));
                 }
-            } catch (NullPointerException e) {
-                System.out.println("NullPointerException caught: No genre selected");
+
+                if (!genreComboBox.getSelectionModel().isEmpty()) {
+                    movieListView.setItems(filterByGenre(observableMovies, Genre.valueOf(genreComboBox.getValue().toString())));
+                }
             }
         });
     }
 
-    public ObservableList<Movie> sortByGenre(ObservableList<Movie> observableMovies, Genre genre) {
-        return FXCollections.observableList(observableMovies.stream().filter(movie -> movie.getGenres().contains(genre)).collect(Collectors.toList()));
+    public ObservableList<Movie> filterByGenre(ObservableList<Movie> observableMovies, Genre genre) {
+        return FXCollections.observableList(observableMovies.stream()
+                .filter(movie -> movie.getGenres().contains(genre)).
+                collect(Collectors.toList()));
     }
 
+    public ObservableList<Movie> filterByQuery(ObservableList<Movie> observableMovies, String query) {
+        return FXCollections.observableList(observableMovies.stream()
+                .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase()))
+                .filter(movie -> movie.getTitle().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList()));
+    }
+
+    public ObservableList<Movie> filterByGenreAndQuery(ObservableList<Movie> observableMovies, Genre genre, String query) {
+        return FXCollections.observableList(observableMovies.stream()
+                .filter(movie -> movie.getGenres().contains(genre))
+                .filter(movie -> movie.getTitle().toLowerCase().contains(query.toLowerCase()))
+                .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList()));
+    }
+
+
     Comparator<? super Movie> movieComparator = Comparator.comparing(Movie::getTitle);
+
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
         observableMovies.sort(movieComparator);
         setSortBtnText("Sort (desc)");
