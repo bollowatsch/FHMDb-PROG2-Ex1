@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import org.junit.jupiter.api.*;
 
@@ -20,8 +21,8 @@ public class MovieTest {
 
     @Test
     public void test_movie_with_one_genre_returns_genre_as_string_for_UI(){
-        ArrayList<Movie.Genre> singleGenreList = new ArrayList<>();
-        singleGenreList.add(Movie.Genre.ADVENTURE);
+        ArrayList<Genre> singleGenreList = new ArrayList<>();
+        singleGenreList.add(Genre.ADVENTURE);
         Movie movieWithSingleGenre = new Movie("","", singleGenreList);
 
         String expected = "ADVENTURE";
@@ -32,10 +33,10 @@ public class MovieTest {
 
     @Test
     public void test_movie_with_multiple_genres_returns_comma_and_space_separated_string_for_UI(){
-        ArrayList<Movie.Genre> singleGenreList = new ArrayList<>();
-        singleGenreList.add(Movie.Genre.ADVENTURE);
-        singleGenreList.add(Movie.Genre.DRAMA);
-        singleGenreList.add(Movie.Genre.BIOGRAPHY);
+        ArrayList<Genre> singleGenreList = new ArrayList<>();
+        singleGenreList.add(Genre.ADVENTURE);
+        singleGenreList.add(Genre.DRAMA);
+        singleGenreList.add(Genre.BIOGRAPHY);
         Movie movieWithSingleGenre = new Movie("","", singleGenreList);
 
         String expected = "ADVENTURE, BIOGRAPHY, DRAMA";
