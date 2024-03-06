@@ -37,7 +37,6 @@ public class HomeController implements Initializable {
     public JFXButton sortBtn;
 
     public List<Movie> allMovies = Movie.initializeMovies();
-
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
@@ -77,7 +76,7 @@ public class HomeController implements Initializable {
         });
     }
 
-    public static ObservableList<Movie> filterByGenre(ObservableList<Movie> observableMovies, Genre genre) {
+    public ObservableList<Movie> filterByGenre(ObservableList<Movie> observableMovies, Genre genre) {
         return FXCollections.observableList(observableMovies.stream()
                 .filter(movie -> movie.getGenres().contains(genre)).
                 collect(Collectors.toList()));
