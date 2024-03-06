@@ -77,7 +77,7 @@ public class HomeController implements Initializable {
         });
     }
 
-    public ObservableList<Movie> filterByGenre(ObservableList<Movie> observableMovies, Genre genre) {
+    public static ObservableList<Movie> filterByGenre(ObservableList<Movie> observableMovies, Genre genre) {
         return FXCollections.observableList(observableMovies.stream()
                 .filter(movie -> movie.getGenres().contains(genre)).
                 collect(Collectors.toList()));

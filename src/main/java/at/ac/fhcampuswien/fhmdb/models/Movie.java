@@ -1,11 +1,14 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public class Movie {
-    private String title;
-    private String description;
-    private List<Genre> genres;
+    private final String title;
+    private final String description;
+    private final List<Genre> genres;
 
     public Movie(String title, String description, List<Genre> genres) {
         this.title = title;
@@ -14,10 +17,10 @@ public class Movie {
         genres.sort(Comparator.comparing(Genre::name));
     }
 
-    public Movie (String title){
+    public Movie(String title) {
         this.title = title;
         this.description = "";
-        this.genres = new ArrayList<Genre>();
+        this.genres = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -27,13 +30,16 @@ public class Movie {
     public String getDescription() {
         return description;
     }
-    public List<Genre> getGenres() { return genres; }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
 
     public String getGenresAsString() {
         if (getGenres().isEmpty())
             return "";
         StringBuilder sb = new StringBuilder();
-        for(Genre genre : getGenres()){
+        for (Genre genre : getGenres()) {
             sb.append(genre.toString().toUpperCase());
             sb.append(", ");
         }
@@ -42,18 +48,17 @@ public class Movie {
     }
 
     @Override
-    public boolean equals(Object o){
-        if(o == this){
+    public boolean equals(Object o) {
+        if (o == this) {
             return true;
         }
-        if(!(o instanceof Movie)){
+        if (!(o instanceof Movie m)) {
             return false;
         }
-        Movie m = (Movie) o;
         return m.title.equals(this.title);
     }
 
-    public static List<Movie> initializeMovies(){
+    public static List<Movie> initializeMovies() {
         List<Movie> movies = new ArrayList<>();
         movies.add(new Movie("The Shawshank Redemption",
                 "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.",
@@ -83,7 +88,7 @@ public class Movie {
                 "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
                 new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
         movies.add(new Movie("The Lord of the Rings: The Fellowship of the Ring\n",
-                "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron." ,
+                "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
                 new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.ACTION, Genre.ADVENTURE))));
         movies.add(new Movie("Inception",
                 "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.",

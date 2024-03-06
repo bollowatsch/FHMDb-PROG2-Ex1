@@ -86,28 +86,29 @@ public class HomeControllerTest {
 
     @Test
     public void test_filter_by_genre() {
-        //Arrange
+        // Arrange
         HomeController hc = new HomeController();
         ObservableList<Movie> movies = FXCollections.observableArrayList();
+
+        // Act
         movies.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
         movies.add(new Movie("The Godfather", "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
         movies.add(new Movie("12th fail", "The real-life story of IPS Officer Manoj Kumar Sharma and IRS Officer Shraddha Joshi.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.BIOGRAPHY))));
 
-        //Act
         ObservableList<Movie> filteredList = hc.filterByGenre(movies, Genre.BIOGRAPHY);
 
-        //Assert
+        // Assert
         assertEquals(movies.get(2), filteredList.get(0));
     }
 
     @Test
-    public void test_filter_by_multiple_genres() {
-        //Arrange
+    public void test_filter_by_genre2() {
+        // Arrange
         ObservableList<Movie> movies = FXCollections.observableList(Movie.initializeMovies());
         HomeController hc = new HomeController();
         ArrayList<Movie> actual = new ArrayList<>();
 
-        //Act
+        // Act
         actual.add(movies.get(5));
         actual.add(movies.get(9));
         actual.add(movies.get(10));
@@ -116,7 +117,20 @@ public class HomeControllerTest {
 
         ObservableList<Movie> filteredList = hc.filterByGenre(movies, Genre.ADVENTURE); //should be 5 movies
 
-        //Assert
+        // Assert
         assertEquals(actual, filteredList);
+    }
+
+    @Test
+    public void test_filter_by_genre_no_match_found() throws Exception {
+        // Arrange
+        ObservableList<Movie> movies = FXCollections.observableList(Movie.initializeMovies());
+        HomeController hc = new HomeController();
+
+        // Act
+        ObservableList<Movie> filteredList = hc.filterByGenre(movies, Genre.MYSTERY);
+
+        // Assert
+        assertEquals(new ArrayList<>(), filteredList);
     }
 }
