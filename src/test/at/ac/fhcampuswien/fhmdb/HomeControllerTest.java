@@ -130,7 +130,7 @@ public class HomeControllerTest {
         //Act
         actual.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
-        ObservableList<Movie> expected = hc.searchByString(movies, "Shaw");
+        ObservableList<Movie> expected = hc.searchByQuery(movies, "Shaw");
 
         //Assert
         assertEquals(expected,actual);
@@ -146,7 +146,7 @@ public class HomeControllerTest {
         //Act
         actual.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
-        ObservableList<Movie> expected = hc.searchByString(movies, "shaw");
+        ObservableList<Movie> expected = hc.searchByQuery(movies, "shaw");
 
         //Assert
         assertEquals(expected,actual);
@@ -167,7 +167,7 @@ public class HomeControllerTest {
                 "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.",
                 new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
 
-        ObservableList<Movie> expected = hc.searchByString(movies, "God");
+        ObservableList<Movie> expected = hc.searchByQuery(movies, "God");
 
         //Assert
         assertEquals(expected,actual);

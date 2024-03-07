@@ -65,21 +65,21 @@ public class HomeController implements Initializable {
 
         searchBtn.setOnAction(actionEvent -> {
             //TODO: Correct display of list filtered by query
-
-//            movieListView.setCellFactory(movieListView -> new MovieCell());
-//            movieListView.setCellFactory(movieListView -> new MovieCell());
+            movieListView.setCellFactory(movieListView -> new MovieCell());
+            observableMovies.clear();
+            movieListView.setCellFactory(movieListView -> new MovieCell());
 
             if (!searchField.getText().isBlank()) {
-                movieListView.setCellFactory(movieListView -> new MovieCell());
-                observableMovies.clear();
-                movieListView.setCellFactory(movieListView -> new MovieCell());
-                movieListView.setItems(searchByString(observableMovies, searchField.getText()));
-                movieListView.setCellFactory(movieListView -> new MovieCell());
+                ObservableList<Movie> filteredList = searchByQuery(observableMovies, searchField.getText());
+                observableMovies.addAll(filteredList);
+            } else {
+                observableMovies.addAll(allMovies);
             }
 
             if (!genreComboBox.getSelectionModel().isEmpty()) {
                 movieListView.setItems(filterByGenre(observableMovies, Genre.valueOf(genreComboBox.getValue().toString())));
             }
+            movieListView.setCellFactory(movieListView -> new MovieCell());
         });
     }
 
@@ -109,9 +109,7 @@ public class HomeController implements Initializable {
         }
     }
 
-    public ObservableList<Movie> searchByString(ObservableList<Movie> observableMovies, String searchString) {
-//        observableMovies.stream().filter(movie -> movie.getTitle().contains(searchString)).collect(Collectors.toList());
-//        return observableMovies;
+    public ObservableList<Movie> searchByQuery(ObservableList<Movie> observableMovies, String searchString) {
 
         ObservableList<Movie> filteredMovies = FXCollections.observableList(allMovies.stream()
                 .filter(movie -> movie.getDescription().toLowerCase().contains(searchString.toLowerCase())
