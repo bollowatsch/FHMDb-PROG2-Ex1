@@ -41,7 +41,9 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        observableMovies.addAll(allMovies);         // add dummy data to observable list
+        //initialize observableList and sort them asc.
+        observableMovies.addAll(allMovies);
+        observableMovies = sortAscendingByTitle(observableMovies);
 
         // initialize UI stuff
         movieListView.setItems(observableMovies);   // set data of observable list to list view
@@ -78,6 +80,8 @@ public class HomeController implements Initializable {
                 observableMovies.addAll(allMovies);
             }
 
+            observableMovies = sortAscendingByTitle(observableMovies);
+
             movieListView.setCellFactory(movieListView -> new MovieCell());
         });
     }
@@ -106,13 +110,13 @@ public class HomeController implements Initializable {
     Comparator<? super Movie> movieComparator = Comparator.comparing(Movie::getTitle);
 
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
-        observableMovies.sort(movieComparator);
+        observableMovies.sort(Comparator.comparing(Movie::getTitle));
         setSortBtnText("Sort (desc)");
         return observableMovies;
     }
 
     public ObservableList<Movie> sortDescendingByTitle(ObservableList<Movie> observableMovies) {
-        observableMovies.sort(movieComparator);
+        observableMovies.sort(Comparator.comparing(Movie::getTitle));
         Collections.reverse(observableMovies);
         setSortBtnText("Sort (asc)");
         return observableMovies;
