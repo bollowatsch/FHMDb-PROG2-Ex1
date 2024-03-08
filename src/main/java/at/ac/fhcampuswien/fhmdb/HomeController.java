@@ -54,12 +54,11 @@ public class HomeController implements Initializable {
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
 
-        // Sort button example:
         sortBtn.setOnAction(actionEvent -> {
             if (sortBtn.getText().equals("Sort (asc)")) {
-                movieListView.setItems(sortAscendingByTitle(movieListView.getItems()));
+                observableMovies = sortAscendingByTitle(observableMovies);
             } else {
-                movieListView.setItems(sortDescendingByTitle(movieListView.getItems()));
+                observableMovies = sortDescendingByTitle(observableMovies);
             }
         });
 
@@ -85,8 +84,8 @@ public class HomeController implements Initializable {
 
     public ObservableList<Movie> filterByGenre(Genre genre) {
         return FXCollections.observableList(allMovies.stream()
-                .filter(movie -> movie.getGenres().contains(genre)).
-                collect(Collectors.toList()));
+                .filter(movie -> movie.getGenres().contains(genre))
+                .collect(Collectors.toList()));
     }
 
     public ObservableList<Movie> filterByQuery(String searchString) {

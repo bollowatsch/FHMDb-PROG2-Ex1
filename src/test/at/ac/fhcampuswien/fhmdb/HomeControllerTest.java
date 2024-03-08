@@ -121,7 +121,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void test_case_sensitive_query_matches_title_returns_single_value_list(){
+    public void test_case_sensitive_query_matches_title_returns_single_value_list() {
         //Arrange
         HomeController hc = new HomeController();
         ObservableList<Movie> actual = FXCollections.observableArrayList();
@@ -132,11 +132,11 @@ public class HomeControllerTest {
         ObservableList<Movie> expected = hc.filterByQuery("Shaw");
 
         //Assert
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void test_case_insensitive_query_matches_title_returns_single_value_list(){
+    public void test_case_insensitive_query_matches_title_returns_single_value_list() {
         //Arrange
         HomeController hc = new HomeController();
         ObservableList<Movie> actual = FXCollections.observableArrayList();
@@ -147,31 +147,27 @@ public class HomeControllerTest {
         ObservableList<Movie> expected = hc.filterByQuery("shaw");
 
         //Assert
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void test_case_sensitive_query_matches_title_returns_multiple_value_list(){
+    public void test_case_sensitive_query_matches_title_returns_multiple_value_list() {
         //Arrange
         HomeController hc = new HomeController();
         ObservableList<Movie> actual = FXCollections.observableArrayList();
 
         //Act
-        actual.add(new Movie("The Godfather",
-                "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
-                new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
-        actual.add(new Movie("The Godfather Part II",
-                "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.",
-                new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
+        actual.add(new Movie("The Godfather", "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
+        actual.add(new Movie("The Godfather Part II", "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
 
         ObservableList<Movie> expected = hc.filterByQuery("God");
 
         //Assert
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void test_filtering_by_genre_and_query () {
+    public void test_filtering_by_genre_and_query() {
         //Arrange
         ObservableList<Movie> movies = FXCollections.observableList(Movie.initializeMovies());
         HomeController hc = new HomeController();
