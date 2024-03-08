@@ -94,7 +94,7 @@ public class HomeControllerTest {
         movies.add(new Movie("12th fail", "The real-life story of IPS Officer Manoj Kumar Sharma and IRS Officer Shraddha Joshi.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.BIOGRAPHY))));
 
         //Act
-        ObservableList<Movie> filteredList = hc.filterByGenre(movies, Genre.BIOGRAPHY);
+        ObservableList<Movie> filteredList = hc.filterByGenre(Genre.BIOGRAPHY);
 
         //Assert
         assertEquals(movies.get(2), filteredList.get(0));
@@ -114,7 +114,7 @@ public class HomeControllerTest {
         actual.add(movies.get(13));
         actual.add(movies.get(14));
 
-        ObservableList<Movie> filteredList = hc.filterByGenre(movies, Genre.ADVENTURE); //should be 5 movies
+        ObservableList<Movie> filteredList = hc.filterByGenre(Genre.ADVENTURE); //should be 5 movies
 
         //Assert
         assertEquals(actual, filteredList);
@@ -124,13 +124,12 @@ public class HomeControllerTest {
     public void test_case_sensitive_query_matches_title_returns_single_value_list(){
         //Arrange
         HomeController hc = new HomeController();
-        ObservableList<Movie> movies = FXCollections.observableList(Movie.initializeMovies());
         ObservableList<Movie> actual = FXCollections.observableArrayList();
 
         //Act
         actual.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
-        ObservableList<Movie> expected = hc.searchByQuery(movies, "Shaw");
+        ObservableList<Movie> expected = hc.filterByQuery("Shaw");
 
         //Assert
         assertEquals(expected,actual);
@@ -140,13 +139,12 @@ public class HomeControllerTest {
     public void test_case_insensitive_query_matches_title_returns_single_value_list(){
         //Arrange
         HomeController hc = new HomeController();
-        ObservableList<Movie> movies = FXCollections.observableList(Movie.initializeMovies());
         ObservableList<Movie> actual = FXCollections.observableArrayList();
 
         //Act
         actual.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
-        ObservableList<Movie> expected = hc.searchByQuery(movies, "shaw");
+        ObservableList<Movie> expected = hc.filterByQuery("shaw");
 
         //Assert
         assertEquals(expected,actual);
@@ -156,7 +154,6 @@ public class HomeControllerTest {
     public void test_case_sensitive_query_matches_title_returns_multiple_value_list(){
         //Arrange
         HomeController hc = new HomeController();
-        ObservableList<Movie> movies = FXCollections.observableList(Movie.initializeMovies());
         ObservableList<Movie> actual = FXCollections.observableArrayList();
 
         //Act
@@ -167,11 +164,25 @@ public class HomeControllerTest {
                 "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.",
                 new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
 
-        ObservableList<Movie> expected = hc.searchByQuery(movies, "God");
+        ObservableList<Movie> expected = hc.filterByQuery("God");
 
         //Assert
         assertEquals(expected,actual);
     }
 
+    @Test
+    public void test_filtering_by_genre_and_query () {
+        //Arrange
+        ObservableList<Movie> movies = FXCollections.observableList(Movie.initializeMovies());
+        HomeController hc = new HomeController();
+        ArrayList<Movie> actual = new ArrayList<>();
+
+        //Act
+        actual.add(movies.get(10));     //Inception
+        ObservableList<Movie> filteredList = hc.filterByQueryAndGenre("pt", Genre.ADVENTURE);
+
+        //Assert
+        assertEquals(actual, filteredList);
+    }
 
 }

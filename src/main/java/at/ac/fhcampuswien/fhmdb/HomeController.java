@@ -69,27 +69,43 @@ public class HomeController implements Initializable {
             observableMovies.clear();
             movieListView.setCellFactory(movieListView -> new MovieCell());
 
-            if (!searchField.getText().isBlank()) {
-                ObservableList<Movie> filteredList = searchByQuery(observableMovies, searchField.getText());
-                observableMovies.addAll(filteredList);
+            if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
+                observableMovies.addAll(filterByQueryAndGenre(searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
+            } else if (!searchField.getText().isBlank()) {
+                observableMovies.addAll(filterByQuery(searchField.getText()));
+            } else if (!genreComboBox.getSelectionModel().isEmpty()) {
+                observableMovies.addAll(filterByGenre(Genre.valueOf(genreComboBox.getValue().toString())));
             } else {
                 observableMovies.addAll(allMovies);
             }
 
-            if (!genreComboBox.getSelectionModel().isEmpty()) {
-                movieListView.setItems(filterByGenre(observableMovies, Genre.valueOf(genreComboBox.getValue().toString())));
-            }
             movieListView.setCellFactory(movieListView -> new MovieCell());
         });
     }
 
-    public ObservableList<Movie> filterByGenre(ObservableList<Movie> observableMovies, Genre genre) {
-        return FXCollections.observableList(observableMovies.stream()
+    public ObservableList<Movie> filterByGenre(Genre genre) {
+        return FXCollections.observableList(allMovies.stream()
                 .filter(movie -> movie.getGenres().contains(genre)).
                 collect(Collectors.toList()));
     }
 
+    public ObservableList<Movie> filterByQuery(String searchString) {
+        return FXCollections.observableList(allMovies.stream()
+                .filter(movie -> movie.getDescription().toLowerCase().contains(searchString.toLowerCase())
+                        || movie.getTitle().toLowerCase().contains(searchString.toLowerCase()))
+                .collect(Collectors.toList()));
+    }
+
+    public ObservableList<Movie> filterByQueryAndGenre(String query, Genre genre) {
+        return FXCollections.observableList(allMovies.stream()
+                .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase())
+                        || movie.getTitle().toLowerCase().contains(query.toLowerCase()))
+                .filter(movie -> movie.getGenres().contains(genre))
+                .collect(Collectors.toList()));
+    }
+
     Comparator<? super Movie> movieComparator = Comparator.comparing(Movie::getTitle);
+
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
         observableMovies.sort(movieComparator);
         setSortBtnText("Sort (desc)");
@@ -108,15 +124,4 @@ public class HomeController implements Initializable {
             sortBtn.setText(text);
         }
     }
-
-    public ObservableList<Movie> searchByQuery(ObservableList<Movie> observableMovies, String searchString) {
-
-        ObservableList<Movie> filteredMovies = FXCollections.observableList(allMovies.stream()
-                .filter(movie -> movie.getDescription().toLowerCase().contains(searchString.toLowerCase())
-                || movie.getTitle().toLowerCase().contains(searchString.toLowerCase()))
-                .collect(Collectors.toList()));
-
-        return filteredMovies;
-    }
-
 }
