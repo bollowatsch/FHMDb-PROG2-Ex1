@@ -19,6 +19,8 @@ public class MovieCell extends ListCell<Movie> {
     protected void updateItem(Movie movie, boolean empty) {
         super.updateItem(movie, empty);
 
+        setGraphic(null);
+
         if (empty || movie == null) {
             setText(null);
         } else {
@@ -54,4 +56,3 @@ public class MovieCell extends ListCell<Movie> {
         }
     }
 }
-

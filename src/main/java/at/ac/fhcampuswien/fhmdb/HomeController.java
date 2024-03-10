@@ -66,23 +66,24 @@ public class HomeController implements Initializable {
 
         searchBtn.setOnAction(actionEvent -> {
             //TODO: Correct display of list filtered by query
-            movieListView.setCellFactory(movieListView -> new MovieCell());
             observableMovies.clear();
-            movieListView.setCellFactory(movieListView -> new MovieCell());
 
             if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
                 observableMovies.addAll(filterByQueryAndGenre(searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
             } else if (!searchField.getText().isBlank()) {
                 observableMovies.addAll(filterByQuery(searchField.getText()));
             } else if (!genreComboBox.getSelectionModel().isEmpty()) {
-                observableMovies.addAll(filterByGenre(Genre.valueOf(genreComboBox.getValue().toString())));
+                Genre genre = genreComboBox.getValue();
+                if (genre == Genre.NONE) {
+                    observableMovies.addAll(allMovies);
+                } else {
+                    observableMovies.addAll(filterByGenre(genre));
+                }
             } else {
                 observableMovies.addAll(allMovies);
             }
 
             observableMovies = sortAscendingByTitle(observableMovies);
-
-            movieListView.setCellFactory(movieListView -> new MovieCell());
         });
     }
 
@@ -92,10 +93,10 @@ public class HomeController implements Initializable {
                 .collect(Collectors.toList()));
     }
 
-    public ObservableList<Movie> filterByQuery(String searchString) {
+    public ObservableList<Movie> filterByQuery(String query) {
         return FXCollections.observableList(allMovies.stream()
-                .filter(movie -> movie.getDescription().toLowerCase().contains(searchString.toLowerCase())
-                        || movie.getTitle().toLowerCase().contains(searchString.toLowerCase()))
+                .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase())
+                        || movie.getTitle().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList()));
     }
 
@@ -106,8 +107,6 @@ public class HomeController implements Initializable {
                 .filter(movie -> movie.getGenres().contains(genre))
                 .collect(Collectors.toList()));
     }
-
-    Comparator<? super Movie> movieComparator = Comparator.comparing(Movie::getTitle);
 
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
         observableMovies.sort(Comparator.comparing(Movie::getTitle));
