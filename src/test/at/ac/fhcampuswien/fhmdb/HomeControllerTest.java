@@ -141,7 +141,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void test_case_sensitive_query_matches_title_returns_single_value_list() {
+    public void test_case_sensitive_query_matches_title_returns_single_movie() {
         //Arrange
         HomeController hc = new HomeController();
         ObservableList<Movie> actual = FXCollections.observableArrayList();
@@ -156,7 +156,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void test_case_insensitive_query_matches_title_returns_single_value_list() {
+    public void test_case_insensitive_query_matches_title_returns_single_movie() {
         //Arrange
         HomeController hc = new HomeController();
         ObservableList<Movie> actual = FXCollections.observableArrayList();
@@ -171,7 +171,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void test_case_sensitive_query_matches_title_returns_multiple_value_list() {
+    public void test_case_sensitive_query_matches_title_returns_multiple_movies() {
         //Arrange
         HomeController hc = new HomeController();
         ObservableList<Movie> actual = FXCollections.observableArrayList();
@@ -181,6 +181,25 @@ public class HomeControllerTest {
         actual.add(new Movie("The Godfather Part II", "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
 
         ObservableList<Movie> expected = hc.filterByQuery("God");
+
+        //Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_query_matches_title_and_description_returns_multiple_movies() {
+        //Arrange
+        HomeController hc = new HomeController();
+        ObservableList<Movie> actual = FXCollections.observableArrayList();
+        ObservableList<Movie> movies = FXCollections.observableList(initializeMovies());
+
+        //Act
+        actual.add(movies.get(0)); //The Shawshank Redemption
+        actual.add(movies.get(8)); //Pulp Fiction
+        actual.add(movies.get(13)); //The Lord of the Rings: The Two Towers
+        actual.add(movies.get(14)); //The Good, the Bad and the Ugly
+
+        ObservableList<Movie> expected = hc.filterByQuery("two");
 
         //Assert
         assertEquals(expected, actual);
