@@ -68,7 +68,7 @@ public class HomeController implements Initializable {
             //TODO: Correct display of list filtered by query
             observableMovies.clear();
 
-            if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
+            if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty() && !genreComboBox.getValue().equals(Genre.NONE)) {
                 observableMovies.addAll(filterByQueryAndGenre(searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
             } else if (!searchField.getText().isBlank()) {
                 observableMovies.addAll(filterByQuery(searchField.getText()));
