@@ -220,4 +220,15 @@ public class HomeControllerTest {
         assertEquals(actual, filteredList);
     }
 
+    @Test
+    public void test_filter_by_genre_ALL() {
+        ObservableList<Movie> expected = FXCollections.observableList(initializeMovies());
+        HomeController hc = new HomeController();
+
+        //Act
+        ObservableList<Movie> actual = hc.filterByGenre(Genre.ALL);
+
+        //Assert
+        assertEquals(expected, actual);
+    }
 }

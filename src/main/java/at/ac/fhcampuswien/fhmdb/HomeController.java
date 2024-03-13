@@ -71,17 +71,12 @@ public class HomeController implements Initializable {
     public void filterMovieView(){
         observableMovies.clear();
 
-        if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty() && !genreComboBox.getValue().equals(Genre.ALL)) {
+        if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
             observableMovies.addAll(filterByQueryAndGenre(searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
         } else if (!searchField.getText().isBlank()) {
             observableMovies.addAll(filterByQuery(searchField.getText()));
         } else if (!genreComboBox.getSelectionModel().isEmpty()) {
-            Genre genre = genreComboBox.getValue();
-            if (genre == Genre.ALL) {
-                observableMovies.addAll(allMovies);
-            } else {
-                observableMovies.addAll(filterByGenre(genre));
-            }
+                observableMovies.addAll(filterByGenre(Genre.valueOf(genreComboBox.getValue().toString())));
         } else {
             observableMovies.addAll(allMovies);
         }
@@ -90,7 +85,8 @@ public class HomeController implements Initializable {
     }
 
     public ObservableList<Movie> filterByGenre(Genre genre) {
-        return FXCollections.observableList(allMovies.stream()
+        if (genre == Genre.ALL) return FXCollections.observableList(allMovies);
+        else return FXCollections.observableList(allMovies.stream()
                 .filter(movie -> movie.getGenres().contains(genre))
                 .collect(Collectors.toList()));
     }
