@@ -64,27 +64,29 @@ public class HomeController implements Initializable {
             }
         });
 
-        searchBtn.setOnAction(actionEvent -> {
-            //TODO: Correct display of list filtered by query
-            observableMovies.clear();
+        searchBtn.setOnAction(actionEvent -> filterMovieView());
+        searchField.setOnAction(actionEvent -> filterMovieView());
+    }
 
-            if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty() && !genreComboBox.getValue().equals(Genre.ALL)) {
-                observableMovies.addAll(filterByQueryAndGenre(searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
-            } else if (!searchField.getText().isBlank()) {
-                observableMovies.addAll(filterByQuery(searchField.getText()));
-            } else if (!genreComboBox.getSelectionModel().isEmpty()) {
-                Genre genre = genreComboBox.getValue();
-                if (genre == Genre.ALL) {
-                    observableMovies.addAll(allMovies);
-                } else {
-                    observableMovies.addAll(filterByGenre(genre));
-                }
-            } else {
+    public void filterMovieView(){
+        observableMovies.clear();
+
+        if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty() && !genreComboBox.getValue().equals(Genre.ALL)) {
+            observableMovies.addAll(filterByQueryAndGenre(searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
+        } else if (!searchField.getText().isBlank()) {
+            observableMovies.addAll(filterByQuery(searchField.getText()));
+        } else if (!genreComboBox.getSelectionModel().isEmpty()) {
+            Genre genre = genreComboBox.getValue();
+            if (genre == Genre.ALL) {
                 observableMovies.addAll(allMovies);
+            } else {
+                observableMovies.addAll(filterByGenre(genre));
             }
+        } else {
+            observableMovies.addAll(allMovies);
+        }
 
-            observableMovies = sortAscendingByTitle(observableMovies);
-        });
+        observableMovies = sortAscendingByTitle(observableMovies);
     }
 
     public ObservableList<Movie> filterByGenre(Genre genre) {
