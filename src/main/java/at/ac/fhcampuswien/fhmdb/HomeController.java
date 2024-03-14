@@ -76,7 +76,7 @@ public class HomeController implements Initializable {
         } else if (!searchField.getText().isBlank()) {
             observableMovies.addAll(filterByQuery(searchField.getText()));
         } else if (!genreComboBox.getSelectionModel().isEmpty()) {
-                observableMovies.addAll(filterByGenre(Genre.valueOf(genreComboBox.getValue().toString())));
+                observableMovies.addAll(filterByGenre(observableMovies, Genre.valueOf(genreComboBox.getValue().toString())));
         } else {
             observableMovies.addAll(allMovies);
         }
@@ -84,9 +84,9 @@ public class HomeController implements Initializable {
         observableMovies = sortAscendingByTitle(observableMovies);
     }
 
-    public ObservableList<Movie> filterByGenre(Genre genre) {
-        if (genre == Genre.ALL) return FXCollections.observableList(allMovies);
-        else return FXCollections.observableList(allMovies.stream()
+    public ObservableList<Movie> filterByGenre(ObservableList<Movie> list, Genre genre) {
+        if (genre == Genre.ALL) return list;
+        else return FXCollections.observableList(list.stream()
                 .filter(movie -> movie.getGenres().contains(genre))
                 .collect(Collectors.toList()));
     }
@@ -99,7 +99,8 @@ public class HomeController implements Initializable {
     }
 
     public ObservableList<Movie> filterByQueryAndGenre(String query, Genre genre) {
-        return FXCollections.observableList(allMovies.stream()
+        if (genre == Genre.ALL) return filterByQuery(query);
+        else return FXCollections.observableList(allMovies.stream()
                 .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase())
                         || movie.getTitle().toLowerCase().contains(query.toLowerCase()))
                 .filter(movie -> movie.getGenres().contains(genre))
