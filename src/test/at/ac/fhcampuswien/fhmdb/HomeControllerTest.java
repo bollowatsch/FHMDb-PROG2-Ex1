@@ -118,7 +118,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery("Shaw");
+        ObservableList<Movie> actual = hc.filterByQuery(expected, "Shaw");
 
         //Assert
         assertEquals(expected, actual);
@@ -131,7 +131,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery("shaw");
+        ObservableList<Movie> actual = hc.filterByQuery(expected, "shaw");
 
         //Assert
         assertEquals(expected, actual);
@@ -145,7 +145,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Godfather Part II", "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery("God");
+        ObservableList<Movie> actual = hc.filterByQuery(expected, "God");
 
         //Assert
         assertEquals(expected, actual);
@@ -161,7 +161,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Good, the Bad and the Ugly", "A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery", new ArrayList<>(Arrays.asList(Genre.ADVENTURE, Genre.WESTERN))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery("two");
+        ObservableList<Movie> actual = hc.filterByQuery(expected, "two");
 
         //Assert
         assertEquals(expected, actual);
@@ -174,7 +174,7 @@ public class HomeControllerTest {
         expected.add(new Movie("Inception", "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.", new ArrayList<>(Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.SCIENCE_FICTION))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQueryAndGenre("pt", Genre.ADVENTURE);
+        ObservableList<Movie> actual = hc.filterByQueryAndGenre(expected, "pt", Genre.ADVENTURE);
 
         //Assert
         assertEquals(expected, actual);

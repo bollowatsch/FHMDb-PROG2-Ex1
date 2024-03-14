@@ -68,15 +68,16 @@ public class HomeController implements Initializable {
         searchField.setOnAction(actionEvent -> filterMovieView());
     }
 
-    public void filterMovieView(){
+    public void filterMovieView() {
         observableMovies.clear();
+        ObservableList<Movie> allMoviesList = FXCollections.observableList(allMovies);
 
         if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
-            observableMovies.addAll(filterByQueryAndGenre(searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
+            observableMovies.addAll(filterByQueryAndGenre(allMoviesList, searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
         } else if (!searchField.getText().isBlank()) {
-            observableMovies.addAll(filterByQuery(searchField.getText()));
+            observableMovies.addAll(filterByQuery(allMoviesList, searchField.getText()));
         } else if (!genreComboBox.getSelectionModel().isEmpty()) {
-                observableMovies.addAll(filterByGenre(observableMovies, Genre.valueOf(genreComboBox.getValue().toString())));
+            observableMovies.addAll(filterByGenre(allMoviesList, Genre.valueOf(genreComboBox.getValue().toString())));
         } else {
             observableMovies.addAll(allMovies);
         }
@@ -84,23 +85,23 @@ public class HomeController implements Initializable {
         observableMovies = sortAscendingByTitle(observableMovies);
     }
 
-    public ObservableList<Movie> filterByGenre(ObservableList<Movie> list, Genre genre) {
-        if (genre == Genre.ALL) return list;
-        else return FXCollections.observableList(list.stream()
+    public ObservableList<Movie> filterByGenre(ObservableList<Movie> movies, Genre genre) {
+        if (genre == Genre.ALL) return movies;
+        else return FXCollections.observableList(movies.stream()
                 .filter(movie -> movie.getGenres().contains(genre))
                 .collect(Collectors.toList()));
     }
 
-    public ObservableList<Movie> filterByQuery(String query) {
-        return FXCollections.observableList(allMovies.stream()
+    public ObservableList<Movie> filterByQuery(ObservableList<Movie> movies, String query) {
+        return FXCollections.observableList(movies.stream()
                 .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase())
                         || movie.getTitle().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList()));
     }
 
-    public ObservableList<Movie> filterByQueryAndGenre(String query, Genre genre) {
-        if (genre == Genre.ALL) return filterByQuery(query);
-        else return FXCollections.observableList(allMovies.stream()
+    public ObservableList<Movie> filterByQueryAndGenre(ObservableList<Movie> movies, String query, Genre genre) {
+        if (genre == Genre.ALL) return filterByQuery(movies, query);
+        else return FXCollections.observableList(movies.stream()
                 .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase())
                         || movie.getTitle().toLowerCase().contains(query.toLowerCase()))
                 .filter(movie -> movie.getGenres().contains(genre))
