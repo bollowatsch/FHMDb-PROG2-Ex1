@@ -36,11 +36,18 @@ public class HomeController implements Initializable {
     public JFXComboBox<Genre> genreComboBox;
 
     @FXML
+    public JFXComboBox<Integer> ratingComboBox;
+
+    @FXML
+    public TextField releaseYearField;
+
+    @FXML
     public JFXButton sortBtn;
 
     private final MovieAPI movieAPI = new MovieAPI();
     private final String URL = "https://prog2.fh-campuswien.ac.at/movies";
     public List<Movie> allMovies;
+
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
@@ -63,6 +70,10 @@ public class HomeController implements Initializable {
 
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Genre.values());
+
+        ratingComboBox.setPromptText("Filter by Rating");
+        ratingComboBox.getItems().addAll(1,2,3,4,5,6,7,8,9);
+
 
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
@@ -101,6 +112,7 @@ public class HomeController implements Initializable {
 
 
     public void filterMovieView() {
+
         observableMovies.clear();
         ObservableList<Movie> allMoviesList = FXCollections.observableList(allMovies);
 
