@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
+import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -13,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,12 +38,21 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton sortBtn;
 
-    public List<Movie> allMovies = Movie.initializeMovies();
+    private final MovieAPI movieAPI = new MovieAPI();
+    private final String URL = "https://prog2.fh-campuswien.ac.at/movies";
+    public List<Movie> allMovies;
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //initialize observableList and sort them asc.
+
+        try {
+            allMovies = movieAPI.get(URL);
+        } catch (IOException e) {
+            allMovies = Movie.initializeMovies();
+        }
+
         observableMovies.addAll(allMovies);
         observableMovies = sortAscendingByTitle(observableMovies);
 
@@ -67,6 +78,27 @@ public class HomeController implements Initializable {
         searchBtn.setOnAction(actionEvent -> filterMovieView());
         searchField.setOnAction(actionEvent -> filterMovieView());
     }
+
+    //TODO
+    public String getMostPopularActor(List<Movie> movies){
+        return null;
+    }
+
+    //TODO
+    public int getLongestMovieTitle(List<Movie> movies) {
+        return 0;
+    }
+
+    //TODO
+    public long countMoviesFrom(List<Movie> movies, String director) {
+        return 0;
+    }
+
+    //TODO
+    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear){
+        return null;
+    }
+
 
     public void filterMovieView() {
         observableMovies.clear();
