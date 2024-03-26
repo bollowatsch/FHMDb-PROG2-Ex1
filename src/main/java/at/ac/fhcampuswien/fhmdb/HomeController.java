@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class HomeController implements Initializable {
     @FXML
@@ -39,7 +40,7 @@ public class HomeController implements Initializable {
     public JFXComboBox<Integer> ratingComboBox;
 
     @FXML
-    public TextField releaseYearField;
+    public JFXComboBox<Integer> releaseYearField;
 
     @FXML
     public JFXButton sortBtn;
@@ -73,6 +74,9 @@ public class HomeController implements Initializable {
 
         ratingComboBox.setPromptText("Filter by Rating");
         ratingComboBox.getItems().addAll(1,2,3,4,5,6,7,8,9);
+
+        releaseYearField.setPromptText("Filter by Release Year");
+        releaseYearField.getItems().setAll(IntStream.rangeClosed(1940, 2024).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList()));
 
 
         // TODO add event handlers to buttons and call the regarding methods
