@@ -46,7 +46,6 @@ public class HomeController implements Initializable {
     public JFXButton sortBtn;
 
     private final MovieAPI movieAPI = new MovieAPI();
-    private final String URL = "https://prog2.fh-campuswien.ac.at/movies";
     public List<Movie> allMovies;
 
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
@@ -55,11 +54,7 @@ public class HomeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //initialize observableList and sort them asc.
 
-        try {
-            allMovies = movieAPI.get(URL);
-        } catch (IOException e) {
-            allMovies = Movie.initializeMovies();
-        }
+        allMovies = movieAPI.get();
 
         observableMovies.addAll(allMovies);
         observableMovies = sortAscendingByTitle(observableMovies);
@@ -77,7 +72,6 @@ public class HomeController implements Initializable {
 
         releaseYearField.setPromptText("Filter by Release Year");
         releaseYearField.getItems().setAll(IntStream.rangeClosed(1940, 2024).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList()));
-
 
         // TODO add event handlers to buttons and call the regarding methods
         // either set event handlers in the fxml file (onAction) or add them here
@@ -116,7 +110,6 @@ public class HomeController implements Initializable {
 
 
     public void filterMovieView() {
-
         observableMovies.clear();
         ObservableList<Movie> allMoviesList = FXCollections.observableList(allMovies);
 
@@ -130,6 +123,15 @@ public class HomeController implements Initializable {
             observableMovies.addAll(allMovies);
         }
 
+        if (!searchField.getText().isBlank()) //Add query to URL
+        if (!genreComboBox.getSelectionModel().isEmpty()) //Add genre to URL
+        if (!releaseYearField.getSelectionModel().isEmpty()) //Add releaseYear to URL
+        if (!ratingComboBox.getSelectionModel().isEmpty()) //Add ratingFrom to URL
+
+        allMovies = movieAPI.get();
+
+        observableMovies.clear();
+        observableMovies.addAll(allMovies);
         observableMovies = sortAscendingByTitle(observableMovies);
     }
 

@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
+import at.ac.fhcampuswien.fhmdb.HomeController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;
@@ -11,9 +12,14 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class MovieAPI {
-    OkHttpClient client = new OkHttpClient();
+    private final String URL = "https://prog2.fh-campuswien.ac.at/movies?";
+    private final OkHttpClient client = new OkHttpClient();
 
-    public List<Movie> get(String url) throws IOException {
+    public List<Movie> get() {
+        return get(URL);
+    }
+
+    private List<Movie> get(String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .header("User-Agent", "http.agent")
@@ -26,8 +32,8 @@ public class MovieAPI {
 
             Type collectionType = new TypeToken<List<Movie>>(){}.getType();
             return gson.fromJson(res.body().string(), collectionType);
+        } catch (IOException e) {
+            return Movie.initializeMovies();
         }
     }
-
-
 }
