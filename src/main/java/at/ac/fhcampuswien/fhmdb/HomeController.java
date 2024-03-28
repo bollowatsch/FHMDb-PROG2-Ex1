@@ -14,12 +14,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -93,14 +89,15 @@ public class HomeController implements Initializable {
         return null;
     }
 
-    //TODO
     public int getLongestMovieTitle(List<Movie> movies) {
-        return 0;
+        return movies.stream().map(Movie::getTitle).mapToInt(String::length).max().orElse(0);
     }
 
     //TODO
     public long countMoviesFrom(List<Movie> movies, String director) {
-        return 0;
+        return movies.stream()
+                .filter(movie -> Arrays.asList(movie.getDirectors()).contains(director))
+                .count();
     }
 
     //TODO
