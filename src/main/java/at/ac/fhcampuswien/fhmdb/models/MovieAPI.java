@@ -1,6 +1,5 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import at.ac.fhcampuswien.fhmdb.HomeController;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.OkHttpClient;

@@ -239,4 +239,129 @@ public class HomeControllerTest {
         //Assert
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void test_countMoviesFrom_director_present_in_all_movies() {
+        //Arrange
+        ObservableList<Movie> movies = FXCollections.observableArrayList();
+        movies.add(new Movie("1", "Movie 1", new ArrayList<>(), 2020, "Description 1", "", 120, new String[]{"Director A"}, new String[]{"Writer A"}, new String[]{"Actor A"}, 7.5));
+        movies.add(new Movie("2", "Movie 2", new ArrayList<>(), 2021, "Description 2", "", 110, new String[]{"Director A"}, new String[]{"Writer B"}, new String[]{"Actor B"}, 8.0));
+        movies.add(new Movie("3", "Movie 3", new ArrayList<>(), 2019, "Description 3", "", 100, new String[]{"Director A"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5));
+
+        //Act
+        long actual = hc.countMoviesFrom(movies, "Director A");
+        long expected = 3;
+
+        //Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_countMoviesFrom_director_present_in_some_movies() {
+        //Arrange
+        ObservableList<Movie> movies = FXCollections.observableArrayList();
+        movies.add(new Movie("1", "Movie 1", new ArrayList<>(), 2020, "Description 1", "", 120, new String[]{"Director A"}, new String[]{"Writer A"}, new String[]{"Actor A"}, 7.5));
+        movies.add(new Movie("2", "Movie 2", new ArrayList<>(), 2021, "Description 2", "", 110, new String[]{"Director B"}, new String[]{"Writer B"}, new String[]{"Actor B"}, 8.0));
+        movies.add(new Movie("3", "Movie 3", new ArrayList<>(), 2019, "Description 3", "", 100, new String[]{"Director A"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5));
+
+        //Act
+        long actual = hc.countMoviesFrom(movies, "Director A");
+        long expected = 2;
+
+        //Assert
+        assertEquals(expected, actual);
+        //assert hc.countMoviesFrom(movies, "Director A") == 2 : "Failed";
+    }
+
+    @Test
+    public void test_countMoviesFrom_director_not_present_in_any_movies() {
+        //Arrange
+        ObservableList<Movie> movies = FXCollections.observableArrayList();
+        movies.add(new Movie("4", "Movie 4", new ArrayList<>(), 2018, "Description 4", "", 90, new String[]{"Director A"}, new String[]{"Writer D"}, new String[]{"Actor D"}, 6.0));
+        movies.add(new Movie("5", "Movie 5", new ArrayList<>(), 2017, "Description 5", "", 80, new String[]{"Director B"}, new String[]{"Writer E"}, new String[]{"Actor E"}, 5.5));
+
+        //Act
+        long actual = hc.countMoviesFrom(movies, "Director C");
+        long expected = 0;
+
+        //Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_countMoviesFrom_empty_movie_list_returns_0() {
+        //Arrange
+        ObservableList<Movie> movies = FXCollections.observableArrayList();
+
+        //Act
+        long actual = hc.countMoviesFrom(movies, "Director A");
+        long expected = 0;
+
+        //Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_getMoviesBetweenYears_movies_exists_between_years() {
+        //Arrange
+        Movie a = new Movie("1", "Movie 1", new ArrayList<>(), 2020, "Description 1", "", 120, new String[]{"Director A"}, new String[]{"Writer A"}, new String[]{"Actor A"}, 7.5);
+        Movie b = new Movie("2", "Movie 2", new ArrayList<>(), 2019, "Description 2", "", 110, new String[]{"Director B"}, new String[]{"Writer B"}, new String[]{"Actor B"}, 8.0);
+        Movie c = new Movie("3", "Movie 3", new ArrayList<>(), 2018, "Description 3", "", 100, new String[]{"Director C"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5);
+
+        List<Movie> movies = new ArrayList<>();
+        movies.add(a);
+        movies.add(b);
+        movies.add(c);
+
+        List<Movie> expected = new ArrayList<>(2);
+        expected.add(a);
+        expected.add(b);
+
+        //Act
+        List<Movie> actual = hc.getMoviesBetweenYears(movies, 2019, 2020);
+
+        //Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_getMoviesBetweenYears_no_movies_between_years() {
+        //Arrange
+        Movie a = new Movie("1", "Movie 1", new ArrayList<>(), 2020, "Description 1", "", 120, new String[]{"Director A"}, new String[]{"Writer A"}, new String[]{"Actor A"}, 7.5);
+        Movie b = new Movie("2", "Movie 2", new ArrayList<>(), 2019, "Description 2", "", 110, new String[]{"Director B"}, new String[]{"Writer B"}, new String[]{"Actor B"}, 8.0);
+        Movie c = new Movie("3", "Movie 3", new ArrayList<>(), 2018, "Description 3", "", 100, new String[]{"Director C"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5);
+
+        List<Movie> movies = new ArrayList<>();
+        movies.add(a);
+        movies.add(b);
+        movies.add(c);
+
+        //Act
+        List<Movie> expected = new ArrayList<>();
+        List<Movie> actual = hc.getMoviesBetweenYears(movies, 2000, 2001);
+
+        //Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void test_getMoviesBetweenYears_start_year_grater_then_end_year_returns_empty_list() {
+        //Arrange
+        Movie a = new Movie("1", "Movie 1", new ArrayList<>(), 2020, "Description 1", "", 120, new String[]{"Director A"}, new String[]{"Writer A"}, new String[]{"Actor A"}, 7.5);
+        Movie b = new Movie("2", "Movie 2", new ArrayList<>(), 2019, "Description 2", "", 110, new String[]{"Director B"}, new String[]{"Writer B"}, new String[]{"Actor B"}, 8.0);
+        Movie c = new Movie("3", "Movie 3", new ArrayList<>(), 2018, "Description 3", "", 100, new String[]{"Director C"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5);
+
+        List<Movie> movies = new ArrayList<>();
+        movies.add(a);
+        movies.add(b);
+        movies.add(c);
+
+        List<Movie> expected = new ArrayList<>();
+
+        //Act
+        List<Movie> actual = hc.getMoviesBetweenYears(movies, 2020, 2019);
+
+        //Assert
+        assertEquals(expected, actual);
+    }
 }

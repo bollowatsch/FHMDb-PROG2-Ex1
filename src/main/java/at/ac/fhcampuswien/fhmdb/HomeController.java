@@ -90,19 +90,23 @@ public class HomeController implements Initializable {
     }
 
     public int getLongestMovieTitle(List<Movie> movies) {
-        return movies.stream().map(Movie::getTitle).mapToInt(String::length).max().orElse(0);
+        return movies.stream()
+                .map(Movie::getTitle)
+                .mapToInt(String::length)
+                .max()
+                .orElse(0);
     }
 
-    //TODO
     public long countMoviesFrom(List<Movie> movies, String director) {
         return movies.stream()
-                .filter(movie -> Arrays.asList(movie.getDirectors()).contains(director))
+                .filter(movie -> movie != null && movie.getDirectors() != null && Arrays.asList(movie.getDirectors()).contains(director))
                 .count();
     }
 
-    //TODO
     public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear){
-        return null;
+        return movies.stream()
+                .filter(movie -> movie.getReleaseYear() >= startYear && movie.getReleaseYear() <= endYear)
+                .collect(Collectors.toList());
     }
 
 
