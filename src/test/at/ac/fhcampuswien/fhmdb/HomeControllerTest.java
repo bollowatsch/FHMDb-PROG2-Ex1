@@ -4,6 +4,7 @@ import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,7 +14,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HomeControllerTest {
-    private final HomeController hc = new HomeController();
+    private static HomeController homeController;
+    @BeforeAll
+    static void init() {
+        homeController = new HomeController();
+    }
 
     @Test
     public void test_sort_empty_MovieList_returns_empty_List() {
@@ -22,7 +27,7 @@ public class HomeControllerTest {
         ObservableList<Movie> expected = FXCollections.observableArrayList();
 
         // Act
-        ObservableList<Movie> actual = hc.sortAscendingByTitle(movieObservableList);
+        ObservableList<Movie> actual = homeController.sortAscendingByTitle(movieObservableList);
 
         // Assert
         assertEquals(actual, expected);
@@ -35,7 +40,7 @@ public class HomeControllerTest {
         ObservableList<Movie> expected = FXCollections.observableArrayList(new Movie("A"), new Movie("B"), new Movie("C"));
 
         // Act
-        ObservableList<Movie> actual = hc.sortAscendingByTitle(movies);
+        ObservableList<Movie> actual = homeController.sortAscendingByTitle(movies);
 
         // Assert
         assertEquals(actual, expected);
@@ -48,7 +53,7 @@ public class HomeControllerTest {
         ObservableList<Movie> expected = FXCollections.observableArrayList(new Movie("C"), new Movie("B"), new Movie("A"));
 
         // Act
-        ObservableList<Movie> actual = hc.sortDescendingByTitle(movies);
+        ObservableList<Movie> actual = homeController.sortDescendingByTitle(movies);
 
         // Assert
         assertEquals(actual, expected);
@@ -61,7 +66,7 @@ public class HomeControllerTest {
         ObservableList<Movie> expected = FXCollections.observableArrayList(new Movie("B"));
 
         // Act
-        ObservableList<Movie> actual = hc.sortAscendingByTitle(movies);
+        ObservableList<Movie> actual = homeController.sortAscendingByTitle(movies);
 
         // Assert
         assertEquals(actual, expected);
@@ -74,7 +79,7 @@ public class HomeControllerTest {
         ObservableList<Movie> expected = FXCollections.observableArrayList(new Movie("A"));
 
         // Act
-        ObservableList<Movie> actual = hc.sortDescendingByTitle(movies);
+        ObservableList<Movie> actual = homeController.sortDescendingByTitle(movies);
 
         // Assert
         assertEquals(actual, expected);
@@ -88,7 +93,7 @@ public class HomeControllerTest {
         expected.add(new Movie("Schindler's List", "In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.HISTORY, Genre.BIOGRAPHY))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByGenre(expected, Genre.BIOGRAPHY);
+        ObservableList<Movie> actual = homeController.filterByGenre(expected, Genre.BIOGRAPHY);
 
         //Assert
         assertEquals(expected, actual);
@@ -105,7 +110,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Good, the Bad and the Ugly", "A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery", new ArrayList<>(Arrays.asList(Genre.ADVENTURE, Genre.WESTERN))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByGenre(expected, Genre.ADVENTURE); //should be 5 movies
+        ObservableList<Movie> actual = homeController.filterByGenre(expected, Genre.ADVENTURE); //should be 5 movies
 
         //Assert
         assertEquals(expected, actual);
@@ -118,7 +123,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery(expected, "Shaw");
+        ObservableList<Movie> actual = homeController.filterByQuery(expected, "Shaw");
 
         //Assert
         assertEquals(expected, actual);
@@ -131,7 +136,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery(expected, "shaw");
+        ObservableList<Movie> actual = homeController.filterByQuery(expected, "shaw");
 
         //Assert
         assertEquals(expected, actual);
@@ -145,7 +150,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Godfather Part II", "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery(expected, "God");
+        ObservableList<Movie> actual = homeController.filterByQuery(expected, "God");
 
         //Assert
         assertEquals(expected, actual);
@@ -161,7 +166,7 @@ public class HomeControllerTest {
         expected.add(new Movie("The Good, the Bad and the Ugly", "A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery", new ArrayList<>(Arrays.asList(Genre.ADVENTURE, Genre.WESTERN))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQuery(expected, "two");
+        ObservableList<Movie> actual = homeController.filterByQuery(expected, "two");
 
         //Assert
         assertEquals(expected, actual);
@@ -174,7 +179,7 @@ public class HomeControllerTest {
         expected.add(new Movie("Inception", "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.", new ArrayList<>(Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.SCIENCE_FICTION))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByQueryAndGenre(expected, "pt", Genre.ADVENTURE);
+        ObservableList<Movie> actual = homeController.filterByQueryAndGenre(expected, "pt", Genre.ADVENTURE);
 
         //Assert
         assertEquals(expected, actual);
@@ -189,7 +194,7 @@ public class HomeControllerTest {
         expected.add(new Movie("Dummy3", "Dummy movie", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.WESTERN))));
 
         //Act
-        ObservableList<Movie> actual = hc.filterByGenre(expected, Genre.ALL);
+        ObservableList<Movie> actual = homeController.filterByGenre(expected, Genre.ALL);
 
         //Assert
         assertEquals(expected, actual);
@@ -202,7 +207,7 @@ public class HomeControllerTest {
         movies.add(new Movie("", "Dummy movie", new ArrayList<>(List.of(Genre.ALL))));
 
         //Act
-        int actual = hc.getLongestMovieTitle(movies);
+        int actual = homeController.getLongestMovieTitle(movies);
         int expected = movies.get(0).getTitle().length();
 
         //Assert
@@ -218,7 +223,7 @@ public class HomeControllerTest {
         movies.add(new Movie("Puss in Boots", "An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.", new ArrayList<>(Arrays.asList(Genre.COMEDY, Genre.FAMILY))));
 
         //Act
-        int actual = hc.getLongestMovieTitle(movies);
+        int actual = homeController.getLongestMovieTitle(movies);
         int expected = movies.get(2).getTitle().length(); //Puss in Boots
 
         //Assert
@@ -233,7 +238,7 @@ public class HomeControllerTest {
         movies.add(new Movie("Inception", "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.THRILLER))));
 
         //Act
-        int actual = hc.getLongestMovieTitle(movies);
+        int actual = homeController.getLongestMovieTitle(movies);
         int expected = movies.get(0).getTitle().length();
 
         //Assert
@@ -249,7 +254,7 @@ public class HomeControllerTest {
         movies.add(new Movie("3", "Movie 3", new ArrayList<>(), 2019, "Description 3", "", 100, new String[]{"Director A"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5));
 
         //Act
-        long actual = hc.countMoviesFrom(movies, "Director A");
+        long actual = homeController.countMoviesFrom(movies, "Director A");
         long expected = 3;
 
         //Assert
@@ -265,7 +270,7 @@ public class HomeControllerTest {
         movies.add(new Movie("3", "Movie 3", new ArrayList<>(), 2019, "Description 3", "", 100, new String[]{"Director A"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5));
 
         //Act
-        long actual = hc.countMoviesFrom(movies, "Director A");
+        long actual = homeController.countMoviesFrom(movies, "Director A");
         long expected = 2;
 
         //Assert
@@ -281,7 +286,7 @@ public class HomeControllerTest {
         movies.add(new Movie("5", "Movie 5", new ArrayList<>(), 2017, "Description 5", "", 80, new String[]{"Director B"}, new String[]{"Writer E"}, new String[]{"Actor E"}, 5.5));
 
         //Act
-        long actual = hc.countMoviesFrom(movies, "Director C");
+        long actual = homeController.countMoviesFrom(movies, "Director C");
         long expected = 0;
 
         //Assert
@@ -294,7 +299,7 @@ public class HomeControllerTest {
         ObservableList<Movie> movies = FXCollections.observableArrayList();
 
         //Act
-        long actual = hc.countMoviesFrom(movies, "Director A");
+        long actual = homeController.countMoviesFrom(movies, "Director A");
         long expected = 0;
 
         //Assert
@@ -318,7 +323,7 @@ public class HomeControllerTest {
         expected.add(b);
 
         //Act
-        List<Movie> actual = hc.getMoviesBetweenYears(movies, 2019, 2020);
+        List<Movie> actual = homeController.getMoviesBetweenYears(movies, 2019, 2020);
 
         //Assert
         assertEquals(expected, actual);
@@ -338,7 +343,7 @@ public class HomeControllerTest {
 
         //Act
         List<Movie> expected = new ArrayList<>();
-        List<Movie> actual = hc.getMoviesBetweenYears(movies, 2000, 2001);
+        List<Movie> actual = homeController.getMoviesBetweenYears(movies, 2000, 2001);
 
         //Assert
         assertEquals(expected, actual);
@@ -359,7 +364,7 @@ public class HomeControllerTest {
         List<Movie> expected = new ArrayList<>();
 
         //Act
-        List<Movie> actual = hc.getMoviesBetweenYears(movies, 2020, 2019);
+        List<Movie> actual = homeController.getMoviesBetweenYears(movies, 2020, 2019);
 
         //Assert
         assertEquals(expected, actual);
