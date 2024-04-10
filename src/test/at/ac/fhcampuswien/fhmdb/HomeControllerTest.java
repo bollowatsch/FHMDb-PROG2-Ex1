@@ -182,28 +182,11 @@ public class HomeControllerTest {
         assertEquals(expected, actual);
     }
 
-    /*  Unnecessary because of redesign -> no Genre.ALL anymore
-
-    @Test
-    public void test_filter_by_genre_ALL() {
-        // Arrange
-        ObservableList<Movie> expected = FXCollections.observableArrayList();
-        expected.add(new Movie("Dummy1", "Dummy movie", new ArrayList<>(Arrays.asList(Genre.HISTORY, Genre.SCIENCE_FICTION))));
-        expected.add(new Movie("Dummy2", "Dummy movie", new ArrayList<>(Arrays.asList(Genre.CRIME, Genre.THRILLER))));
-        expected.add(new Movie("Dummy3", "Dummy movie", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.WESTERN))));
-
-        //Act
-        ObservableList<Movie> actual = hc.filterByGenre(expected, Genre.ALL);
-
-        //Assert
-        assertEquals(expected, actual);
-    }
-
     @Test
     public void test_getLongestMovieTitle_with_given_set_of_movies_returns_zero_when_no_titles_found() {
         //Arrange
         ObservableList<Movie> movies = FXCollections.observableArrayList();
-        movies.add(new Movie("", "Dummy movie", new ArrayList<>(List.of(Genre.ALL))));
+        movies.add(new Movie("", "Dummy movie", new ArrayList<>(List.of(Genre.WAR))));
 
         //Act
         int actual = hc.getLongestMovieTitle(movies);
@@ -212,7 +195,6 @@ public class HomeControllerTest {
         //Assert
         assertEquals(expected, actual);
     }
-     */
 
     @Test
     public void test_getLongestMovieTitle_returns_correct_length_of_longest_title() {
