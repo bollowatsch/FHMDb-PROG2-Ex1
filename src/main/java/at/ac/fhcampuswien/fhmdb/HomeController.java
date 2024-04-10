@@ -46,17 +46,13 @@ public class HomeController implements Initializable {
     public JFXButton clearBtn;
 
     private final MovieAPI movieAPI = new MovieAPI();
-    public List<Movie> allMovies;
 
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //initialize observableList and sort them asc.
-
-        allMovies = movieAPI.get();
-
-        observableMovies.addAll(allMovies);
+        observableMovies.addAll(movieAPI.get());
         observableMovies = sortAscendingByTitle(observableMovies);
 
         // initialize UI stuff
@@ -72,9 +68,6 @@ public class HomeController implements Initializable {
 
         releaseYearField.setPromptText("Filter by Release Year");
         releaseYearField.getItems().setAll(IntStream.rangeClosed(1940, 2024).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList()));
-
-        // TODO add event handlers to buttons and call the regarding methods
-        // either set event handlers in the fxml file (onAction) or add them here
 
         sortBtn.setOnAction(actionEvent -> {
             if (sortBtn.getText().equals("Sort ↑")) {
@@ -122,57 +115,29 @@ public class HomeController implements Initializable {
 
 
     public void filterMovieView() {
-        observableMovies.clear();
-        ObservableList<Movie> allMoviesList = FXCollections.observableList(allMovies);
-
-        /* Old Implementation without API (Exercise 1)
-
-        if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
-            observableMovies.addAll(filterByQueryAndGenre(allMoviesList, searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
-        } else if (!searchField.getText().isBlank()) {
-            observableMovies.addAll(filterByQuery(allMoviesList, searchField.getText()));
-        } else if (!genreComboBox.getSelectionModel().isEmpty()) {
-            observableMovies.addAll(filterByGenre(allMoviesList, Genre.valueOf(genreComboBox.getValue().toString())));
-        } else {
-            observableMovies.addAll(allMovies);
-        }
-
-         */
-
         StringBuilder url = new StringBuilder("https://prog2.fh-campuswien.ac.at/movies?");
         if (!searchField.getText().isBlank()) {
-            //Add query to URL
             url.append("&query=").append(searchField.getText());
         }
         if (!genreComboBox.getSelectionModel().isEmpty()) {
-            //Add genre to URL
             url.append("&genre=").append(genreComboBox.getSelectionModel().getSelectedItem());
         }
         if (!releaseYearField.getSelectionModel().isEmpty()) {
-            //Add releaseYear to URL
             url.append("&releaseYear=").append(releaseYearField.getSelectionModel().getSelectedItem());
         }
         if (!ratingComboBox.getSelectionModel().isEmpty()) {
-            //Add ratingFrom to URL
             url.append("&ratingFrom=").append(ratingComboBox.getSelectionModel().getSelectedItem());
         }
         // delete unnecessary & after base url
         if (url.length() > "https://prog2.fh-campuswien.ac.at/movies?".length()) {
             url.deleteCharAt("https://prog2.fh-campuswien.ac.at/movies?".length());
         }
-
-        allMovies = movieAPI.get(url.toString());
-
         observableMovies.clear();
-        observableMovies.addAll(allMovies);
+        observableMovies.addAll(movieAPI.get(url.toString()));
         observableMovies = sortAscendingByTitle(observableMovies);
     }
 
     public ObservableList<Movie> filterByGenre(ObservableList<Movie> movies, Genre genre) {
-        /*if (genre == Genre.ALL) return movies;
-        else
-
-         */
         return FXCollections.observableList(movies.stream().filter(movie -> movie.getGenres().contains(genre))
                 .collect(Collectors.toList()));
     }
@@ -185,9 +150,6 @@ public class HomeController implements Initializable {
     }
 
     public ObservableList<Movie> filterByQueryAndGenre(ObservableList<Movie> movies, String query, Genre genre) {
-        /*if (genre == Genre.ALL) return filterByQuery(movies, query);
-        else
-         */
         return FXCollections.observableList(movies.stream()
                 .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase())
                         || movie.getTitle().toLowerCase().contains(query.toLowerCase()))
