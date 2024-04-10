@@ -77,7 +77,7 @@ public class HomeController implements Initializable {
         // either set event handlers in the fxml file (onAction) or add them here
 
         sortBtn.setOnAction(actionEvent -> {
-            if (sortBtn.getText().equals("Sort (asc)")) {
+            if (sortBtn.getText().equals("Sort ↑")) {
                 observableMovies = sortAscendingByTitle(observableMovies);
             } else {
                 observableMovies = sortDescendingByTitle(observableMovies);
@@ -144,7 +144,7 @@ public class HomeController implements Initializable {
             //Add query to URL
             url.append("&query=").append(searchField.getText());
         }
-        if (!genreComboBox.getSelectionModel().isEmpty() && !genreComboBox.getSelectionModel().getSelectedItem().equals(Genre.ALL)){
+        if (!genreComboBox.getSelectionModel().isEmpty()){
             //Add genre to URL
             url.append("&genre=").append(genreComboBox.getSelectionModel().getSelectedItem());
         }
@@ -169,9 +169,11 @@ public class HomeController implements Initializable {
     }
 
     public ObservableList<Movie> filterByGenre(ObservableList<Movie> movies, Genre genre) {
-        if (genre == Genre.ALL) return movies;
-        else return FXCollections.observableList(movies.stream()
-                .filter(movie -> movie.getGenres().contains(genre))
+        /*if (genre == Genre.ALL) return movies;
+        else
+
+         */
+        return FXCollections.observableList(movies.stream().filter(movie -> movie.getGenres().contains(genre))
                 .collect(Collectors.toList()));
     }
 
@@ -183,8 +185,10 @@ public class HomeController implements Initializable {
     }
 
     public ObservableList<Movie> filterByQueryAndGenre(ObservableList<Movie> movies, String query, Genre genre) {
-        if (genre == Genre.ALL) return filterByQuery(movies, query);
-        else return FXCollections.observableList(movies.stream()
+        /*if (genre == Genre.ALL) return filterByQuery(movies, query);
+        else
+         */
+        return FXCollections.observableList(movies.stream()
                 .filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase())
                         || movie.getTitle().toLowerCase().contains(query.toLowerCase()))
                 .filter(movie -> movie.getGenres().contains(genre))
@@ -193,14 +197,14 @@ public class HomeController implements Initializable {
 
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
         observableMovies.sort(Comparator.comparing(Movie::getTitle));
-        setSortBtnText("Sort (desc)");
+        setSortBtnText("Sort ↓");
         return observableMovies;
     }
 
     public ObservableList<Movie> sortDescendingByTitle(ObservableList<Movie> observableMovies) {
         observableMovies.sort(Comparator.comparing(Movie::getTitle));
         Collections.reverse(observableMovies);
-        setSortBtnText("Sort (asc)");
+        setSortBtnText("Sort ↑");
         return observableMovies;
     }
 

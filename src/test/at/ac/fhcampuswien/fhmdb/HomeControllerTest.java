@@ -182,6 +182,8 @@ public class HomeControllerTest {
         assertEquals(expected, actual);
     }
 
+    /*  Unnecessary because of redesign -> no Genre.ALL anymore
+
     @Test
     public void test_filter_by_genre_ALL() {
         // Arrange
@@ -210,6 +212,7 @@ public class HomeControllerTest {
         //Assert
         assertEquals(expected, actual);
     }
+     */
 
     @Test
     public void test_getLongestMovieTitle_returns_correct_length_of_longest_title() {
