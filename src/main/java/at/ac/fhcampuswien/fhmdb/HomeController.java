@@ -70,7 +70,7 @@ public class HomeController implements Initializable {
         releaseYearField.getItems().setAll(IntStream.rangeClosed(1940, 2024).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList()));
 
         sortBtn.setOnAction(actionEvent -> {
-            if (sortBtn.getText().equals("Sort ↑")) {
+            if (sortBtn.getText().equals("Sort ↓")) {
                 observableMovies = sortAscendingByTitle(observableMovies);
             } else {
                 observableMovies = sortDescendingByTitle(observableMovies);
@@ -159,14 +159,14 @@ public class HomeController implements Initializable {
 
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
         observableMovies.sort(Comparator.comparing(Movie::getTitle));
-        setSortBtnText("Sort ↓");
+        setSortBtnText("Sort ↑");
         return observableMovies;
     }
 
     public ObservableList<Movie> sortDescendingByTitle(ObservableList<Movie> observableMovies) {
         observableMovies.sort(Comparator.comparing(Movie::getTitle));
         Collections.reverse(observableMovies);
-        setSortBtnText("Sort ↑");
+        setSortBtnText("Sort ↓");
         return observableMovies;
     }
 
