@@ -68,7 +68,7 @@ public class HomeController implements Initializable {
         genreComboBox.getItems().addAll(Genre.values());
 
         ratingComboBox.setPromptText("Filter by Rating");
-        ratingComboBox.getItems().addAll(1,2,3,4,5,6,7,8,9);
+        ratingComboBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
         releaseYearField.setPromptText("Filter by Release Year");
         releaseYearField.getItems().setAll(IntStream.rangeClosed(1940, 2024).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList()));
@@ -96,7 +96,7 @@ public class HomeController implements Initializable {
     }
 
     //TODO
-    public String getMostPopularActor(List<Movie> movies){
+    public String getMostPopularActor(List<Movie> movies) {
         return null;
     }
 
@@ -114,7 +114,7 @@ public class HomeController implements Initializable {
                 .count();
     }
 
-    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear){
+    public List<Movie> getMoviesBetweenYears(List<Movie> movies, int startYear, int endYear) {
         return movies.stream()
                 .filter(movie -> movie.getReleaseYear() >= startYear && movie.getReleaseYear() <= endYear)
                 .collect(Collectors.toList());
@@ -140,24 +140,24 @@ public class HomeController implements Initializable {
          */
 
         StringBuilder url = new StringBuilder("https://prog2.fh-campuswien.ac.at/movies?");
-        if (!searchField.getText().isBlank()){
+        if (!searchField.getText().isBlank()) {
             //Add query to URL
             url.append("&query=").append(searchField.getText());
         }
-        if (!genreComboBox.getSelectionModel().isEmpty()){
+        if (!genreComboBox.getSelectionModel().isEmpty()) {
             //Add genre to URL
             url.append("&genre=").append(genreComboBox.getSelectionModel().getSelectedItem());
         }
-        if (!releaseYearField.getSelectionModel().isEmpty()){
+        if (!releaseYearField.getSelectionModel().isEmpty()) {
             //Add releaseYear to URL
             url.append("&releaseYear=").append(releaseYearField.getSelectionModel().getSelectedItem());
         }
-        if (!ratingComboBox.getSelectionModel().isEmpty()){
+        if (!ratingComboBox.getSelectionModel().isEmpty()) {
             //Add ratingFrom to URL
             url.append("&ratingFrom=").append(ratingComboBox.getSelectionModel().getSelectedItem());
         }
         // delete unnecessary & after base url
-        if (url.length() > "https://prog2.fh-campuswien.ac.at/movies?".length()){
+        if (url.length() > "https://prog2.fh-campuswien.ac.at/movies?".length()) {
             url.deleteCharAt("https://prog2.fh-campuswien.ac.at/movies?".length());
         }
 
