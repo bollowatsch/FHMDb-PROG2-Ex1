@@ -18,7 +18,7 @@ public class MovieAPI {
         return get(URL);
     }
 
-    private List<Movie> get(String url) {
+    public List<Movie> get(String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .header("User-Agent", "http.agent")

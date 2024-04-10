@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -114,6 +115,8 @@ public class HomeController implements Initializable {
         observableMovies.clear();
         ObservableList<Movie> allMoviesList = FXCollections.observableList(allMovies);
 
+        /* Old Implementation without API (Exercise 1)
+
         if (!searchField.getText().isBlank() && !genreComboBox.getSelectionModel().isEmpty()) {
             observableMovies.addAll(filterByQueryAndGenre(allMoviesList, searchField.getText(), Genre.valueOf(genreComboBox.getValue().toString())));
         } else if (!searchField.getText().isBlank()) {
@@ -124,12 +127,31 @@ public class HomeController implements Initializable {
             observableMovies.addAll(allMovies);
         }
 
-        if (!searchField.getText().isBlank()) //Add query to URL
-        if (!genreComboBox.getSelectionModel().isEmpty()) //Add genre to URL
-        if (!releaseYearField.getSelectionModel().isEmpty()) //Add releaseYear to URL
-        if (!ratingComboBox.getSelectionModel().isEmpty()) //Add ratingFrom to URL
+         */
 
-        allMovies = movieAPI.get();
+        StringBuilder url = new StringBuilder("https://prog2.fh-campuswien.ac.at/movies?");
+        if (!searchField.getText().isBlank()){
+            //Add query to URL
+            url.append("&query=").append(searchField.getText());
+        }
+        if (!genreComboBox.getSelectionModel().isEmpty() && !genreComboBox.getSelectionModel().getSelectedItem().equals(Genre.ALL)){
+            //Add genre to URL
+            url.append("&genre=").append(genreComboBox.getSelectionModel().getSelectedItem());
+        }
+        if (!releaseYearField.getSelectionModel().isEmpty()){
+            //Add releaseYear to URL
+            url.append("&releaseYear=").append(releaseYearField.getSelectionModel().getSelectedItem());
+        }
+        if (!ratingComboBox.getSelectionModel().isEmpty()){
+            //Add ratingFrom to URL
+            url.append("&ratingFrom=").append(ratingComboBox.getSelectionModel().getSelectedItem());
+        }
+        // delete unnecessary & after base url
+        if (url.length() > "https://prog2.fh-campuswien.ac.at/movies?".length()){
+            url.deleteCharAt("https://prog2.fh-campuswien.ac.at/movies?".length());
+        }
+
+        allMovies = movieAPI.get(url.toString());
 
         observableMovies.clear();
         observableMovies.addAll(allMovies);
