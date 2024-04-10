@@ -38,6 +38,7 @@
             <JFXComboBox fx:id="ratingComboBox" focusColor="#f5c518" styleClass="filter-combo-box"
                          stylesheets="@styles.css"/>
             <JFXButton fx:id="searchBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Filter"/>
+            <JFXButton fx:id="clearBtn" styleClass="background-light-black, text-white" stylesheets="@styles.css" text="Clear Filters"/>
         </children>
         <VBox.margin>
             <Insets/>

@@ -42,6 +42,9 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton sortBtn;
 
+    @FXML
+    public JFXButton clearBtn;
+
     private final MovieAPI movieAPI = new MovieAPI();
     public List<Movie> allMovies;
 
@@ -82,6 +85,13 @@ public class HomeController implements Initializable {
         });
 
         searchBtn.setOnAction(actionEvent -> filterMovieView());
+        clearBtn.setOnAction(actionEvent -> {
+            searchField.clear();
+            genreComboBox.getSelectionModel().clearSelection();
+            ratingComboBox.getSelectionModel().clearSelection();
+            releaseYearField.getSelectionModel().clearSelection();
+            filterMovieView();
+        });
         searchField.setOnAction(actionEvent -> filterMovieView());
     }
 
