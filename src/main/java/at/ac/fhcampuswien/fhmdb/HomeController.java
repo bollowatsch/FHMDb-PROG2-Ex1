@@ -93,12 +93,11 @@ public class HomeController implements Initializable {
         if (movies.stream().anyMatch(movie -> movie.getMainCast() == null)) {
             return null;
         }
-        String mostPopularActor = Arrays.toString(movies.stream()
-                .map(Movie::getMainCast)
+        return movies.stream()
+                .flatMap(movie ->  Arrays.stream(movie.getMainCast()))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                         .entrySet().stream().max(Map.Entry.comparingByValue())
-                        .map(Map.Entry::getKey).orElse(null));
-        return mostPopularActor;
+                        .map(Map.Entry::getKey).orElse(null);
     }
 
     public int getLongestMovieTitle(List<Movie> movies) {

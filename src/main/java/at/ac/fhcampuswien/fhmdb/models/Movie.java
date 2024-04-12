@@ -45,6 +45,13 @@ public class Movie {
         this.rating = rating;
     }
 
+    public Movie(String title, String description, List<Genre> genres, String[] mainCast){
+        this.title = title;
+        this.description = description;
+        this.genres = genres;
+        this.mainCast = mainCast;
+    }
+
     public String getTitle() {
         return title;
     }
