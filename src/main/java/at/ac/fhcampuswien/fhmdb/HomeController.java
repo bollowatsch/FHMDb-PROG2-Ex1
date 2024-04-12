@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -88,9 +89,16 @@ public class HomeController implements Initializable {
         searchField.setOnAction(actionEvent -> filterMovieView());
     }
 
-    //TODO
     public String getMostPopularActor(List<Movie> movies) {
-        return null;
+        if (movies.stream().anyMatch(movie -> movie.getMainCast() == null)) {
+            return null;
+        }
+        String mostPopularActor = Arrays.toString(movies.stream()
+                .map(Movie::getMainCast)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                        .entrySet().stream().max(Map.Entry.comparingByValue())
+                        .map(Map.Entry::getKey).orElse(null));
+        return mostPopularActor;
     }
 
     public int getLongestMovieTitle(List<Movie> movies) {

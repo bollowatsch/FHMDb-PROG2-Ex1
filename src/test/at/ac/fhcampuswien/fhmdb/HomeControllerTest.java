@@ -183,6 +183,22 @@ public class HomeControllerTest {
     }
 
     @Test
+    public void test_getMostPopularActor_returns_null_when_no_actors_found(){
+        //Arrange
+        ObservableList<Movie> movies = FXCollections.observableArrayList();
+        movies.add(new Movie("Inception", "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.THRILLER))));
+        movies.add(new Movie("Pulp Fiction", "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.", new ArrayList<>(Arrays.asList(Genre.ADVENTURE, Genre.COMEDY))));
+        movies.add(new Movie("Puss in Boots", "An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.", new ArrayList<>(Arrays.asList(Genre.COMEDY, Genre.FAMILY))));
+
+        //Act
+        String actual = hc.getMostPopularActor(movies);
+        String expected = null;
+
+        //Assert
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void test_getLongestMovieTitle_with_given_set_of_movies_returns_zero_when_no_titles_found() {
         //Arrange
         ObservableList<Movie> movies = FXCollections.observableArrayList();
