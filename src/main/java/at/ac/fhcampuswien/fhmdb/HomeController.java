@@ -12,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -47,13 +46,14 @@ public class HomeController implements Initializable {
     public JFXButton clearBtn;
 
     private final MovieAPI movieAPI = new MovieAPI();
+    private final String URL = "https://prog2.fh-campuswien.ac.at/movies?";
 
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //initialize observableList and sort them asc.
-        observableMovies.addAll(movieAPI.get());
+        observableMovies.addAll(movieAPI.get(URL));     // request movies from API
         observableMovies = sortAscendingByTitle(observableMovies);
 
         // initialize UI stuff
@@ -122,7 +122,7 @@ public class HomeController implements Initializable {
 
 
     public void filterMovieView() {
-        StringBuilder url = new StringBuilder("https://prog2.fh-campuswien.ac.at/movies?");
+        StringBuilder url = new StringBuilder(URL);
         if (!searchField.getText().isBlank()) {
             url.append("&query=").append(searchField.getText());
         }
@@ -136,8 +136,8 @@ public class HomeController implements Initializable {
             url.append("&ratingFrom=").append(ratingComboBox.getSelectionModel().getSelectedItem());
         }
         // delete unnecessary & after base url
-        if (url.length() > "https://prog2.fh-campuswien.ac.at/movies?".length()) {
-            url.deleteCharAt("https://prog2.fh-campuswien.ac.at/movies?".length());
+        if (url.length() > URL.length()) {
+            url.deleteCharAt(URL.length());
         }
         observableMovies.clear();
         observableMovies.addAll(movieAPI.get(url.toString()));

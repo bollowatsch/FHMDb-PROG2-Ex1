@@ -11,12 +11,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class MovieAPI {
-    private final String URL = "https://prog2.fh-campuswien.ac.at/movies?";
     private final OkHttpClient client = new OkHttpClient();
-
-    public List<Movie> get() {
-        return get(URL);
-    }
 
     public List<Movie> get(String url) {
         Request request = new Request.Builder()
