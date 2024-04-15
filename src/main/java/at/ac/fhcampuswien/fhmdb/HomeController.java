@@ -120,7 +120,7 @@ public class HomeController implements Initializable {
                 .collect(Collectors.toList());
     }
 
-
+    // TODO - add layer to separate UI from API & add tests
     public void filterMovieView() {
         StringBuilder url = new StringBuilder(URL);
         if (!searchField.getText().isBlank()) {

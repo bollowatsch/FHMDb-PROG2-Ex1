@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MovieAPI {
     private final OkHttpClient client = new OkHttpClient();
-
+    // TODO delete dummy data and add error message -> ex3?
     public List<Movie> get(String url) {
         Request request = new Request.Builder()
                 .url(url)
