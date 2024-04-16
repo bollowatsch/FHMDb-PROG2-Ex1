@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieEntity  extends WatchlistMovieEntity{
@@ -13,6 +14,85 @@ public class MovieEntity  extends WatchlistMovieEntity{
     int lengthInMinutes;
     double rating;
 
+    public long getId() {
+        return id;
+    }
+
+    public String getApiId() {
+        return apiId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public int getLengthInMinutes() {
+        return lengthInMinutes;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+    public MovieEntity(Movie movie) {
+        this.id = Long.parseLong(movie.getId());
+        this.apiId = "";
+        this.title = movie.getTitle();
+        this.description = movie.getDescription();
+        this.genres = this.genresToString(movie.getGenres());
+        this.releaseYear = movie.getReleaseYear();
+        this.imgUrl = movie.getImgUrl();
+        this.lengthInMinutes = movie.getLengthInMinutes();
+        this.rating = movie.getRating();
+
+    }
+
+    public MovieEntity(long id, String apiId, String title, String description, String genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating){
+        this.id = id;
+        this.apiId = apiId;
+        this.title = title;
+        this.description = description;
+        this.genres = genres;
+        this.releaseYear = releaseYear;
+        this.imgUrl = imgUrl;
+        this.lengthInMinutes = lengthInMinutes;
+        this.rating = rating;
+    }
+
+    public MovieEntity() {
+        this.id = 0;
+        this.apiId = "";
+        this.title = "";
+        this.description = "";
+        this.genres = "";
+        this.releaseYear = 0;
+        this.imgUrl = "";
+        this.lengthInMinutes = 0;
+        this.rating = 0;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o.getClass() != this.getClass()){
+            return false;
+        }
+        return this.id == ((MovieEntity) o).id;
+    }
     public String genresToString(List<Genre> genres) {
         if(genres.isEmpty()){
             return "";
@@ -25,13 +105,19 @@ public class MovieEntity  extends WatchlistMovieEntity{
         return sb.toString();
     }
 
-    List<MovieEntity> fromMovies(List<Movie> movies) {
-        //TODO convert list of movie objects (used for UI) to movie entities (used for DB)
-        return null;
+    public List<MovieEntity> fromMovies(List<Movie> movies) {
+        ArrayList<MovieEntity> movieEntityList = new ArrayList<MovieEntity>();
+        for(Movie movie : movies){
+            movieEntityList.add(new MovieEntity(movie));
+        }
+        return movieEntityList;
     }
 
-    List<Movie> toMovies(List<MovieEntity> movieEntities) {
-        //TODO convert list of movie entities (used for DB) to movie list of movie objects (used for UI)
-        return null;
+    public List<Movie> toMovies(List<MovieEntity> movieEntities) {
+        ArrayList<Movie> movieList = new ArrayList<>();
+        for(MovieEntity movieEntity : movieEntities){
+            movieList.add(new Movie(movieEntity));
+        }
+        return movieList;
     }
 }

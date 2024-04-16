@@ -52,6 +52,15 @@ public class Movie {
         this.mainCast = mainCast;
     }
 
+    public Movie(MovieEntity movieEntity) {
+        this(Long.toString(movieEntity.getId()), movieEntity.getTitle(), new ArrayList<Genre>(), movieEntity.getReleaseYear(), movieEntity.getDescription(), movieEntity.getImgUrl(), movieEntity.getLengthInMinutes(), new String[]{},new String[]{},new String[]{}, movieEntity.getRating());
+        for(String genre : movieEntity.getGenres().split(",")){
+            if(!genre.equals("")){
+                this.genres.add(Genre.valueOf(genre));
+            }
+        }
+    }
+
     public String getTitle() {
         return title;
     }
