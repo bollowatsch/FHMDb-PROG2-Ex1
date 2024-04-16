@@ -20,7 +20,7 @@ public class MovieEntityTest {
     private static final MovieEntity movieEntityB = new MovieEntity(2, "", "Movie 2", "Description 2", "", 2021, "", 110, 8.0);
     private static final MovieEntity movieEntityC = new MovieEntity(3, "", "Movie 3", "Description 3", "", 2019, "", 100, 6.5);
 
-    /* TODO does not work for some reason -> initialized in class
+    /* TODO does not work for some reason -> initialized in class -> find a way to make @BeforeAll work with maven
     @BeforeAll
     public static void init() {
         movieEntity = new MovieEntity();
