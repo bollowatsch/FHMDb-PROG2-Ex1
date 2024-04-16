@@ -13,9 +13,16 @@ public class MovieEntity  extends WatchlistMovieEntity{
     int lengthInMinutes;
     double rating;
 
-    String genresToString(List<Genre> genres) {
-        //TODO convert given list to string containing comma separated values
-        return null;
+    public String genresToString(List<Genre> genres) {
+        if(genres.isEmpty()){
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for(Genre genre : genres){
+            sb.append(genre).append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 
     List<MovieEntity> fromMovies(List<Movie> movies) {
