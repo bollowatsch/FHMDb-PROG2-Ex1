@@ -2,7 +2,7 @@ package at.ac.fhcampuswien.fhmdb.models;
 
 import java.util.List;
 
-public class MovieEntity {
+public class MovieEntity  extends WatchlistMovieEntity{
     long id;
     String apiId;
     String title;
