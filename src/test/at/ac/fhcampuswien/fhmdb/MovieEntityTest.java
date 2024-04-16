@@ -112,4 +112,51 @@ public class MovieEntityTest {
         //then
         assertEquals(actual, expected);
     }
+
+    @Test
+    public void test_toMovies_empty_movieEntityList_returns_empty_movieList() {
+        //given
+        List<MovieEntity> movieEntityList = new ArrayList<>();
+
+        //when
+        List<Movie> actual = movieEntity.toMovies(movieEntityList);
+        List<Movie> expected = new ArrayList<Movie>();
+
+        //then
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void test_toMovies_single_movie_movieEntityList_returns_single_movie_movieList() {
+        //given
+        List<MovieEntity> movieEntityList = new ArrayList<>();
+        movieEntityList.add(movieEntityA);
+
+        //when
+        List<Movie> actual = movieEntity.toMovies(movieEntityList);
+        List<Movie> expected = new ArrayList<Movie>();
+        expected.add(movieA);
+
+        //then
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void test_toMovies_multiple_movies_movieEntityList_returns_multiple_movies_movieList() {
+        //given
+        List<MovieEntity> movieEntityList = new ArrayList<>();
+        movieEntityList.add(movieEntityA);
+        movieEntityList.add(movieEntityB);
+        movieEntityList.add(movieEntityC);
+
+        //when
+        List<Movie> actual = movieEntity.toMovies(movieEntityList);
+        List<Movie> expected = new ArrayList<Movie>();
+        expected.add(movieA);
+        expected.add(movieB);
+        expected.add(movieC);
+
+        //then
+        assertEquals(actual, expected);
+    }
 }
