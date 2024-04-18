@@ -18,20 +18,6 @@ public class Movie {
     private String[] mainCast;
     private double rating;
 
-
-    public Movie(String title, String description, List<Genre> genres) {
-        this.title = title;
-        this.description = description;
-        this.genres = genres;
-        genres.sort(Comparator.comparing(Genre::name));
-    }
-
-    public Movie(String title) {
-        this.title = title;
-        this.description = "";
-        this.genres = new ArrayList<>();
-    }
-
     public Movie(String id, String title, List<Genre> genres, int releaseYear, String description, String imgUrl, int lengthInMinutes, String[] directors, String[] writers, String[] mainCast, double rating) {
         this.id = id;
         this.title = title;
@@ -44,22 +30,6 @@ public class Movie {
         this.writers = writers;
         this.mainCast = mainCast;
         this.rating = rating;
-    }
-
-    public Movie(String title, String description, List<Genre> genres, String[] mainCast){
-        this.title = title;
-        this.description = description;
-        this.genres = genres;
-        this.mainCast = mainCast;
-    }
-
-    public Movie(MovieEntity movieEntity) {
-        this(Long.toString(movieEntity.getId()), movieEntity.getTitle(), new ArrayList<Genre>(), movieEntity.getReleaseYear(), movieEntity.getDescription(), movieEntity.getImgUrl(), movieEntity.getLengthInMinutes(), new String[]{},new String[]{},new String[]{}, movieEntity.getRating());
-        for(String genre : movieEntity.getGenres().split(",")){
-            if(!genre.equals("")){
-                this.genres.add(Genre.valueOf(genre));
-            }
-        }
     }
 
     public String getTitle() {
@@ -98,6 +68,7 @@ public class Movie {
 
     public static List<Movie> initializeMovies() {
         List<Movie> movies = new ArrayList<>();
+        /*
         movies.add(new Movie("The Shawshank Redemption", "Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.", new ArrayList<>(List.of(Genre.DRAMA))));
         movies.add(new Movie("The Godfather", "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.CRIME))));
         movies.add(new Movie("12th fail", "The real-life story of IPS Officer Manoj Kumar Sharma and IRS Officer Shraddha Joshi.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.BIOGRAPHY))));
@@ -113,6 +84,7 @@ public class Movie {
         movies.add(new Movie("Forrest Gump", "The history of the United States from the 1950s to the '70s unfolds from the perspective of an Alabama man with an IQ of 75, who yearns to be reunited with his childhood sweetheart.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.ROMANCE))));
         movies.add(new Movie("The Lord of the Rings: The Two Towers", "While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.", new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.ACTION, Genre.ADVENTURE))));
         movies.add(new Movie("The Good, the Bad and the Ugly", "A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery", new ArrayList<>(Arrays.asList(Genre.ADVENTURE, Genre.WESTERN))));
+         */
         return movies;
     }
 

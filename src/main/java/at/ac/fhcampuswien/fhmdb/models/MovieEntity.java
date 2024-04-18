@@ -3,7 +3,7 @@ package at.ac.fhcampuswien.fhmdb.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieEntity  extends WatchlistMovieEntity{
+public class MovieEntity extends WatchlistMovieEntity {
     long id;
     String apiId;
     String title;
@@ -49,6 +49,7 @@ public class MovieEntity  extends WatchlistMovieEntity{
     public double getRating() {
         return rating;
     }
+
     protected MovieEntity(Movie movie) {
         this.id = Long.parseLong(movie.getId());
         this.apiId = "";
@@ -62,7 +63,7 @@ public class MovieEntity  extends WatchlistMovieEntity{
 
     }
 
-    protected MovieEntity(long id, String apiId, String title, String description, String genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating){
+    protected MovieEntity(long id, String apiId, String title, String description, String genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating) {
         this.id = id;
         this.apiId = apiId;
         this.title = title;
@@ -75,18 +76,19 @@ public class MovieEntity  extends WatchlistMovieEntity{
     }
 
     @Override
-    public boolean equals(Object o){
-        if(o.getClass() != this.getClass()){
+    public boolean equals(Object o) {
+        if (o.getClass() != this.getClass()) {
             return false;
         }
         return this.id == ((MovieEntity) o).id;
     }
+
     public String genresToString(List<Genre> genres) {
-        if(genres.isEmpty()){
+        if (genres.isEmpty()) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for(Genre genre : genres){
+        for (Genre genre : genres) {
             sb.append(genre).append(",");
         }
         sb.deleteCharAt(sb.length() - 1);
@@ -95,32 +97,51 @@ public class MovieEntity  extends WatchlistMovieEntity{
 
     public List<MovieEntity> fromMovies(List<Movie> movies) {
         ArrayList<MovieEntity> movieEntityList = new ArrayList<MovieEntity>();
-        for(Movie movie : movies){
+        for (Movie movie : movies) {
             movieEntityList.add(new MovieEntity(movie));
         }
         return movieEntityList;
     }
 
     public List<Movie> toMovies(List<MovieEntity> movieEntities) {
+        MovieBuilder mb = new MovieBuilder();
         ArrayList<Movie> movieList = new ArrayList<>();
-        for(MovieEntity movieEntity : movieEntities){
-            movieList.add(new Movie(movieEntity));
-        }
-        return movieList;
-    }
 
-    @Override
-    public String toString() {
-        return "MovieEntity{" +
-                "id=" + id +
-                ", apiId='" + apiId + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", genres='" + genres + '\'' +
-                ", releaseYear=" + releaseYear +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", lengthInMinutes=" + lengthInMinutes +
-                ", rating=" + rating +
-                '}';
+        for (MovieEntity movieEntity : movieEntities) {
+            List<Genre> genres = new ArrayList<Genre>();
+            for (String genre : movieEntity.getGenres().split(",")) {
+                if (!genre.equals("")) {
+                    genres.add(Genre.valueOf(genre));
+                }
+            }
+                movieList.add(mb.setId(String.valueOf(movieEntity.getId()))
+                        .setTitle(movieEntity.getTitle())
+                        .setGenres(genres)
+                        .setReleaseYear(movieEntity.getReleaseYear())
+                        .setDescription(movieEntity.getDescription())
+                        .setImgUrl(movieEntity.getImgUrl())
+                        .setLengthInMinutes(movieEntity.getLengthInMinutes())
+                        .setDirectors(new String[]{})
+                        .setWriters(new String[]{})
+                        .setMainCast(new String[]{})
+                        .setRating(movieEntity.getRating())
+                        .build());
+            }
+            return movieList;
+        }
+
+        @Override
+        public String toString () {
+            return "MovieEntity{" +
+                    "id=" + id +
+                    ", apiId='" + apiId + '\'' +
+                    ", title='" + title + '\'' +
+                    ", description='" + description + '\'' +
+                    ", genres='" + genres + '\'' +
+                    ", releaseYear=" + releaseYear +
+                    ", imgUrl='" + imgUrl + '\'' +
+                    ", lengthInMinutes=" + lengthInMinutes +
+                    ", rating=" + rating +
+                    '}';
+        }
     }
-}
