@@ -49,7 +49,7 @@ public class MovieEntity  extends WatchlistMovieEntity{
     public double getRating() {
         return rating;
     }
-    public MovieEntity(Movie movie) {
+    protected MovieEntity(Movie movie) {
         this.id = Long.parseLong(movie.getId());
         this.apiId = "";
         this.title = movie.getTitle();
@@ -62,7 +62,7 @@ public class MovieEntity  extends WatchlistMovieEntity{
 
     }
 
-    public MovieEntity(long id, String apiId, String title, String description, String genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating){
+    protected MovieEntity(long id, String apiId, String title, String description, String genres, int releaseYear, String imgUrl, int lengthInMinutes, double rating){
         this.id = id;
         this.apiId = apiId;
         this.title = title;
@@ -72,18 +72,6 @@ public class MovieEntity  extends WatchlistMovieEntity{
         this.imgUrl = imgUrl;
         this.lengthInMinutes = lengthInMinutes;
         this.rating = rating;
-    }
-
-    public MovieEntity() {
-        this.id = 0;
-        this.apiId = "";
-        this.title = "";
-        this.description = "";
-        this.genres = "";
-        this.releaseYear = 0;
-        this.imgUrl = "";
-        this.lengthInMinutes = 0;
-        this.rating = 0;
     }
 
     @Override
@@ -119,5 +107,20 @@ public class MovieEntity  extends WatchlistMovieEntity{
             movieList.add(new Movie(movieEntity));
         }
         return movieList;
+    }
+
+    @Override
+    public String toString() {
+        return "MovieEntity{" +
+                "id=" + id +
+                ", apiId='" + apiId + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", genres='" + genres + '\'' +
+                ", releaseYear=" + releaseYear +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", lengthInMinutes=" + lengthInMinutes +
+                ", rating=" + rating +
+                '}';
     }
 }

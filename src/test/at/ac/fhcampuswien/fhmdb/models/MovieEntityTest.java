@@ -1,8 +1,9 @@
-package at.ac.fhcampuswien.fhmdb;
+package at.ac.fhcampuswien.fhmdb.models;
 
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieEntity;
+import at.ac.fhcampuswien.fhmdb.models.MovieEntityBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,14 +12,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MovieEntityTest {
-    private static MovieEntity movieEntity = new MovieEntity();
+    private static final MovieEntityBuilder movieEntityBuilder = new MovieEntityBuilder();
+    private static final MovieEntity movieEntity = movieEntityBuilder.setId(99).setTitle("Dummy Movie for static methods").build();
     private static final Movie movieA = new Movie("1", "Movie 1", new ArrayList<>(), 2020, "Description 1", "", 120, new String[]{"Director A"}, new String[]{"Writer A"}, new String[]{"Actor A"}, 7.5);
     private static final Movie movieB = new Movie("2", "Movie 2", new ArrayList<>(), 2021, "Description 2", "", 110, new String[]{"Director B"}, new String[]{"Writer B"}, new String[]{"Actor B"}, 8.0);
     private static final Movie movieC = new Movie("3", "Movie 3", new ArrayList<>(), 2019, "Description 3", "", 100, new String[]{"Director A"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5);
 
-    private static final MovieEntity movieEntityA = new MovieEntity(1, "", "Movie 1", "Description 1", "", 2020, "", 120, 7.5);
-    private static final MovieEntity movieEntityB = new MovieEntity(2, "", "Movie 2", "Description 2", "", 2021, "", 110, 8.0);
-    private static final MovieEntity movieEntityC = new MovieEntity(3, "", "Movie 3", "Description 3", "", 2019, "", 100, 6.5);
+    private static final MovieEntity movieEntityA = movieEntityBuilder.setId(1).setTitle("Movie 1").setDescription("Description 1").setReleaseYear(2020).setLengthInMinutes(120).setRating(7.5).build();
+    private static final MovieEntity movieEntityB = movieEntityBuilder.setId(2).setTitle("Movie 2").setDescription("Description 2").setReleaseYear(2021).setLengthInMinutes(110).setRating(8.0).build();
+    private static final MovieEntity movieEntityC = movieEntityBuilder.setId(3).setTitle("Movie 3").setDescription("Description 3").setReleaseYear(2019).setLengthInMinutes(100).setRating(6.5).build();
 
     /* TODO does not work for some reason -> initialized in class -> find a way to make @BeforeAll work with maven
     @BeforeAll

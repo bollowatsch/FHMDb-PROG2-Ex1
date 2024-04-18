@@ -18,6 +18,7 @@ public class Movie {
     private String[] mainCast;
     private double rating;
 
+
     public Movie(String title, String description, List<Genre> genres) {
         this.title = title;
         this.description = description;
