@@ -4,21 +4,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieEntityBuilder {
-    long id = 0;
-    String apiId = "";
-    String title = "";
-    String description = "";
-    String genres = "";
-    int releaseYear = 0;
-    String imgUrl = "";
-    int lengthInMinutes = 0;
-    double rating = 0.0;
+    long id;
+    String apiId;
+    String title;
+    String description;
+    String genres;
+    int releaseYear;
+    String imgUrl;
+    int lengthInMinutes;
+    double rating;
 
-    public MovieEntity build(){
-        if(id == 0) throw new IllegalStateException("No ID was set!");
-        if(title.isBlank()) throw new IllegalStateException("No title was set!");
-        return new MovieEntity(id, apiId,title,description,genres,releaseYear,imgUrl,lengthInMinutes,rating);
+    private void reset() {
+        id = 0;
+        apiId = "";
+        title = "";
+        description = "";
+        genres = "";
+        releaseYear = 0;
+        imgUrl = "";
+        lengthInMinutes = 0;
+        rating = 0.0;
     }
+
+    public MovieEntityBuilder() {
+        reset();
+    }
+
+    public MovieEntity build() {
+        if (id == 0) throw new IllegalStateException("No ID was set!");
+        if (title.isBlank()) throw new IllegalStateException("No title was set!");
+        MovieEntity movieEntity = new MovieEntity(id, apiId, title, description, genres, releaseYear, imgUrl, lengthInMinutes, rating);
+        reset();
+        return movieEntity;
+    }
+
     public MovieEntityBuilder setId(long id) {
         this.id = id;
         return this;

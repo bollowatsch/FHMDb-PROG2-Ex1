@@ -1,28 +1,48 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MovieBuilder {
-    private String id = null;
-    private String title = null;
-    private List<Genre> genres = null;
-    private Integer releaseYear = null;
-    private String description = null;
-    private String imgUrl = null;
-    private Integer lengthInMinutes = null;
-    private String[] directors = null;
-    private String[] writers = null;
-    private String[] mainCast = null;
-    private Double rating = null;
+    private String id;
+    private String title;
+    private List<Genre> genres;
+    private Integer releaseYear;
+    private String description;
+    private String imgUrl;
+    private Integer lengthInMinutes;
+    private String[] directors;
+    private String[] writers;
+    private String[] mainCast;
+    private Double rating;
 
+    private void reset(){
+        id = null;
+        title = null;
+        genres = null;
+        releaseYear = null;
+        description = null;
+        imgUrl = null;
+        lengthInMinutes = null;
+        directors = null;
+        writers = null;
+        mainCast = null;
+        rating = null;
+    }
 
+    public MovieBuilder(){
+        reset();
+    }
     public Movie build() {
         if (id == null) throw new IllegalStateException("No ID was set!");
         if (title == null) throw new IllegalStateException("No Title was set!");
         if (releaseYear == null) releaseYear = 0;
         if (lengthInMinutes == null) lengthInMinutes = 0;
         if (rating == null) rating = 0.0;
-        return new Movie(id, title, genres, releaseYear, description, imgUrl, lengthInMinutes, directors, writers, mainCast, rating);
+        Movie movie = new Movie(id, title, genres, releaseYear, description, imgUrl, lengthInMinutes, directors, writers, mainCast, rating);
+        reset();
+        return movie;
     }
 
     public MovieBuilder setId(String id) {
@@ -36,6 +56,7 @@ public class MovieBuilder {
     }
 
     public MovieBuilder setGenres(List<Genre> genres) {
+        Collections.sort(genres);
         this.genres = genres;
         return this;
     }

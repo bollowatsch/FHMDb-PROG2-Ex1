@@ -123,4 +123,21 @@ public class Movie {
     public double getRating() {
         return rating;
     }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", genres=" + genres +
+                ", releaseYear=" + releaseYear +
+                ", description='" + description + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", lengthInMinutes=" + lengthInMinutes +
+                ", directors=" + Arrays.toString(directors) +
+                ", writers=" + Arrays.toString(writers) +
+                ", mainCast=" + Arrays.toString(mainCast) +
+                ", rating=" + rating +
+                '}';
+    }
 }

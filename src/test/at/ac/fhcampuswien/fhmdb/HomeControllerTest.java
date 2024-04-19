@@ -99,11 +99,13 @@ public class HomeControllerTest {
     public void test_filter_by_genre() {
         //Arrange
         ObservableList<Movie> expected = FXCollections.observableArrayList();
-        expected.add(mb.setTitle("12th fail")
+        expected.add(mb.setId("")
+                .setTitle("12th fail")
                 .setDescription("The real-life story of IPS Officer Manoj Kumar Sharma and IRS Officer Shraddha Joshi.")
                 .setGenres(new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.BIOGRAPHY)))
                 .build());
-        expected.add(mb.setTitle("Schindler's List")
+        expected.add(mb.setId("")
+                .setTitle("Schindler's List")
                 .setDescription("In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.")
                 .setGenres(new ArrayList<>(Arrays.asList(Genre.DRAMA, Genre.HISTORY, Genre.BIOGRAPHY)))
                 .build());
@@ -272,6 +274,7 @@ public class HomeControllerTest {
                 .setDescription("An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.")
                 .setGenres(new ArrayList<>(Arrays.asList(Genre.COMEDY, Genre.FAMILY)))
                 .build());
+        System.out.println(movies);
 
         //Act
         String actual = hc.getMostPopularActor(movies);
