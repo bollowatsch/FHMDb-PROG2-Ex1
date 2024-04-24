@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MovieEntityTest {
     private static final MovieEntityBuilder movieEntityBuilder = new MovieEntityBuilder();
+    private static final MovieBuilder movieBuilder = new MovieBuilder();
     private static final MovieEntity movieEntity = movieEntityBuilder.setId(99).setTitle("Dummy Movie for static methods").build();
-    private static final Movie movieA = new Movie("1", "Movie 1", new ArrayList<>(), 2020, "Description 1", "", 120, new String[]{"Director A"}, new String[]{"Writer A"}, new String[]{"Actor A"}, 7.5);
-    private static final Movie movieB = new Movie("2", "Movie 2", new ArrayList<>(), 2021, "Description 2", "", 110, new String[]{"Director B"}, new String[]{"Writer B"}, new String[]{"Actor B"}, 8.0);
-    private static final Movie movieC = new Movie("3", "Movie 3", new ArrayList<>(), 2019, "Description 3", "", 100, new String[]{"Director A"}, new String[]{"Writer C"}, new String[]{"Actor C"}, 6.5);
-
+    private static final Movie movieA = movieBuilder.setId("1").setTitle("Movie 1").setReleaseYear(2020).setDescription("Description 1").setLengthInMinutes(120).setGenres(new ArrayList<Genre>()).setRating(7.5).build();
+    private static final Movie movieB = movieBuilder.setId("2").setTitle("Movie 2").setReleaseYear(2021).setDescription("Description 2").setLengthInMinutes(110).setGenres(new ArrayList<Genre>()).setRating(8.0).build();
+    private static final Movie movieC = movieBuilder.setId("3").setTitle("Movie 3").setReleaseYear(2029).setDescription("Description 3").setLengthInMinutes(100).setGenres(new ArrayList<Genre>()).setRating(6.5).build();
     private static final MovieEntity movieEntityA = movieEntityBuilder.setId(1).setTitle("Movie 1").setDescription("Description 1").setReleaseYear(2020).setLengthInMinutes(120).setRating(7.5).build();
     private static final MovieEntity movieEntityB = movieEntityBuilder.setId(2).setTitle("Movie 2").setDescription("Description 2").setReleaseYear(2021).setLengthInMinutes(110).setRating(8.0).build();
     private static final MovieEntity movieEntityC = movieEntityBuilder.setId(3).setTitle("Movie 3").setDescription("Description 3").setReleaseYear(2019).setLengthInMinutes(100).setRating(6.5).build();

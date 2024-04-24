@@ -274,7 +274,6 @@ public class HomeControllerTest {
                 .setDescription("An outlaw cat, his childhood egg-friend, and a seductive thief kitty set out in search for the eggs of the fabled Golden Goose to clear his name, restore his lost honor, and regain the trust of his mother and town.")
                 .setGenres(new ArrayList<>(Arrays.asList(Genre.COMEDY, Genre.FAMILY)))
                 .build());
-        System.out.println(movies);
 
         //Act
         String actual = hc.getMostPopularActor(movies);
