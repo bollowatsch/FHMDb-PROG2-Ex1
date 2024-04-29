@@ -9,7 +9,7 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 public class Database {
-    public static final String DB_URL = "jdbc:h2:file ./db/fhmdb";
+    public static final String DB_URL = "jdbc:h2:file: ./db/fhmdb";
     private static final String USER = "user";
     private static final String PASSWORD = "password";
 
@@ -44,7 +44,7 @@ public class Database {
 
     public void testDB() throws SQLException {
         MovieEntityBuilder movieEntityBuilder = new MovieEntityBuilder();
-        MovieEntity movie = movieEntityBuilder.setId(1).setTitle("Test").build();
+        MovieEntity movie = movieEntityBuilder.setTitle("Test").build();
         movieDao.create(movie);
     }
 

@@ -31,7 +31,7 @@ public class MovieEntityBuilder {
     }
 
     public MovieEntity build() {
-        if (id == 0) throw new IllegalStateException("No ID was set!");
+        //if (id == 0) throw new IllegalStateException("No ID was set!");
         if (title.isBlank()) throw new IllegalStateException("No title was set!");
         MovieEntity movieEntity = new MovieEntity(id, apiId, title, description, genres, releaseYear, imgUrl, lengthInMinutes, rating);
         reset();
