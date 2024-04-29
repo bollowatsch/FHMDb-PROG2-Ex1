@@ -46,6 +46,8 @@ public class Database {
         MovieEntityBuilder movieEntityBuilder = new MovieEntityBuilder();
         MovieEntity movie = movieEntityBuilder.setTitle("Test").build();
         movieDao.create(movie);
+        movie = movieEntityBuilder.setTitle("best title").setDescription("best description").setGenres("ACTION, DRAMA").build();
+        movieDao.create(movie);
     }
 
 

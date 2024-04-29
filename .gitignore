@@ -1,5 +1,3 @@
-./db
-
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -35,3 +33,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/db/fhmdb.mv.db
+/db/fhmdb.trace.db
+/db/*
