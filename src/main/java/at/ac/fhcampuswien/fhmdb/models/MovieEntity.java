@@ -1,17 +1,30 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@DatabaseTable(tableName = "movie")
 public class MovieEntity extends WatchlistMovieEntity {
+    @DatabaseField(id=true, generatedId = true)
     long id;
+    @DatabaseField()
     String apiId;
+    @DatabaseField()
     String title;
+    @DatabaseField()
     String description;
+    @DatabaseField()
     String genres;
+    @DatabaseField()
     int releaseYear;
+    @DatabaseField()
     String imgUrl;
+    @DatabaseField()
     int lengthInMinutes;
+    @DatabaseField()
     double rating;
 
     public long getId() {
@@ -73,6 +86,10 @@ public class MovieEntity extends WatchlistMovieEntity {
         this.imgUrl = imgUrl;
         this.lengthInMinutes = lengthInMinutes;
         this.rating = rating;
+    }
+
+    public MovieEntity() {
+        // ORMLite needs a no-arg constructor
     }
 
     @Override
