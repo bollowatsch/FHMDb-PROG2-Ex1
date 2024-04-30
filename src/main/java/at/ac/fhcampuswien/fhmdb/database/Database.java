@@ -1,4 +1,4 @@
-package at.ac.fhcampuswien.fhmdb.models;
+package at.ac.fhcampuswien.fhmdb.database;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -14,17 +14,18 @@ public class Database {
     private static final String PASSWORD = "password";
 
     private static ConnectionSource connectionSource;
-
-    Dao<MovieEntity, Long> movieDao;
-
     private static Database instance;
+
+    private Dao<MovieEntity, Long> movieDao;
+    private Dao<WatchlistMovieEntity, Long> watchlistDao;
+
 
     //TODO: Exception Handling in Methodensignatur?
     private Database() {
         try {
             createConnectionSource();
             movieDao = DaoManager.createDao(connectionSource, MovieEntity.class);
-            TableUtils.createTableIfNotExists(connectionSource, MovieEntity.class);
+            createTables();
         } catch (SQLException e) {
             System.out.println("Error creating database");
             System.out.println(e.getMessage());
@@ -50,6 +51,15 @@ public class Database {
         movieDao.create(movie);
     }
 
+    private static void createTables() throws SQLException {
+        TableUtils.createTableIfNotExists(connectionSource, MovieEntity.class);
+    }
 
+    public Dao<WatchlistMovieEntity, Long> getWatchlistDao() {
+        return this.watchlistDao;
+    }
 
+    public Dao<MovieEntity, Long> getMovieDao() {
+        return this.movieDao;
+    }
 }

@@ -1,5 +1,8 @@
-package at.ac.fhcampuswien.fhmdb.models;
+package at.ac.fhcampuswien.fhmdb.database;
 
+import at.ac.fhcampuswien.fhmdb.models.Genre;
+import at.ac.fhcampuswien.fhmdb.models.Movie;
+import at.ac.fhcampuswien.fhmdb.models.MovieBuilder;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -112,7 +115,7 @@ public class MovieEntity extends WatchlistMovieEntity {
         return sb.toString();
     }
 
-    public List<MovieEntity> fromMovies(List<Movie> movies) {
+    public static List<MovieEntity> fromMovies(List<Movie> movies) {
         ArrayList<MovieEntity> movieEntityList = new ArrayList<MovieEntity>();
         for (Movie movie : movies) {
             movieEntityList.add(new MovieEntity(movie));

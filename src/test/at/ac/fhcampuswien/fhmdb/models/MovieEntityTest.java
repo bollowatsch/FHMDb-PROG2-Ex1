@@ -1,9 +1,7 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import at.ac.fhcampuswien.fhmdb.models.Genre;
-import at.ac.fhcampuswien.fhmdb.models.Movie;
-import at.ac.fhcampuswien.fhmdb.models.MovieEntity;
-import at.ac.fhcampuswien.fhmdb.models.MovieEntityBuilder;
+import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
+import at.ac.fhcampuswien.fhmdb.database.MovieEntityBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
