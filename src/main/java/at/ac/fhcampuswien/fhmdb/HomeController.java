@@ -1,5 +1,9 @@
 package at.ac.fhcampuswien.fhmdb;
 
+import at.ac.fhcampuswien.fhmdb.database.Database;
+import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
+import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieAPI;
@@ -45,10 +49,17 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton clearBtn;
 
+    @FXML
+    public JFXButton switchView;
+
     private final MovieAPI movieAPI = new MovieAPI();
     private final String URL = "https://prog2.fh-campuswien.ac.at/movies?";
 
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+
+    private Database database = Database.getDatabase();
+    private WatchlistRepository watchlistRepository = new WatchlistRepository();
+    private MovieRepository movieRepository = new MovieRepository();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,8 +69,9 @@ public class HomeController implements Initializable {
 
         // initialize UI stuff
         movieListView.setItems(observableMovies);   // set data of observable list to list view
-        movieListView.setCellFactory(movieListView -> new MovieCell()); // use custom cell factory to display data
+        movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
         movieListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //TODO Hide horizontal scroll bar of listView
 
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Genre.values());
@@ -78,6 +90,24 @@ public class HomeController implements Initializable {
             }
         });
 
+        switchView.setOnAction(actionEvent -> {
+            if (switchView.getText().equals("Watchlist")) {
+                //TODO Display watchlist.
+                observableMovies.clear();
+
+            } else {
+                //TODO load from API.
+                observableMovies.clear();
+                observableMovies.addAll(movieAPI.get(URL));
+                observableMovies = sortAscendingByTitle(observableMovies);
+            }
+        });
+
+        //TODO Collect data from MovieApplication (Movie.java)
+        // create MovieEntity with this info
+        //
+
+
         searchBtn.setOnAction(actionEvent -> filterMovieView());
         clearBtn.setOnAction(actionEvent -> {
             searchField.clear();
@@ -88,6 +118,10 @@ public class HomeController implements Initializable {
         });
         searchField.setOnAction(actionEvent -> filterMovieView());
     }
+
+    private final ClickEventHandler<Movie> onAddToWatchlistClicked = (clickedItem) -> {
+        System.out.printf("HomeController: Movie \"%s\" saved to watchlist\n", clickedItem.getTitle());
+    };
 
     public String getMostPopularActor(List<Movie> movies) {
         if (movies.stream().anyMatch(movie -> movie.getMainCast() == null)) {

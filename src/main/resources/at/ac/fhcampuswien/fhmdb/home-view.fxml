@@ -39,6 +39,7 @@
                          stylesheets="@styles.css"/>
             <JFXButton fx:id="searchBtn" styleClass="background-yellow" stylesheets="@styles.css" text="Filter"/>
             <JFXButton fx:id="clearBtn" styleClass="background-light-black, text-white" stylesheets="@styles.css" text="Clear Filters"/>
+            <JFXButton fx:id="switchView" styleClass="background-yellow" stylesheets="@styles.css" text="Watchlist"/>
         </children>
         <VBox.margin>
             <Insets/>

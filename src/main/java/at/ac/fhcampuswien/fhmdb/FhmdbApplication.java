@@ -21,12 +21,14 @@ public class FhmdbApplication extends Application {
 
         //test database creation - just for testing
         //TODO: delete after testing
+        /*
         Database db = Database.getDatabase();
         try {
             db.testDB();
         } catch (Exception e) {
             e.printStackTrace();
         }
+         */
 
     }
 

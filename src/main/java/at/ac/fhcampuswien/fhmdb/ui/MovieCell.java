@@ -1,19 +1,29 @@
 package at.ac.fhcampuswien.fhmdb.ui;
 
+import at.ac.fhcampuswien.fhmdb.models.ClickEventHandler;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class MovieCell extends ListCell<Movie> {
     private final Label title = new Label();
     private final Label detail = new Label();
     private final Label genres = new Label();
-    private final VBox layout = new VBox(title, detail, genres);
+    private final Button addToWatchlist = new Button();
+    private final Button removeFromWatchlist = new Button();
+    private final HBox head = new HBox(title, addToWatchlist);
+    private final VBox layout = new VBox(head, detail, genres);
+
+    public MovieCell(ClickEventHandler<Movie> addToWatchlistClicked) {
+        super();
+        addToWatchlist.setOnAction(actionEvent -> {
+            addToWatchlistClicked.onClick(getItem());
+        });
+    }
 
     @Override
     protected void updateItem(Movie movie, boolean empty) {
@@ -37,6 +47,16 @@ public class MovieCell extends ListCell<Movie> {
                             : "No genres available"
             );
 
+            //TODO Add button to add movie to watchlist.
+            addToWatchlist.setText("★");
+            addToWatchlist.getStyleClass().add("background-yellow");
+
+            HBox.setHgrow(title, Priority.ALWAYS);
+            title.setMaxWidth(Double.MAX_VALUE);
+            head.setPadding(new Insets(0, 10, 0, 0));
+
+            removeFromWatchlist.setText("-");
+            removeFromWatchlist.getStyleClass().add("background-yellow");
 
             // color scheme
             title.getStyleClass().add("text-yellow");

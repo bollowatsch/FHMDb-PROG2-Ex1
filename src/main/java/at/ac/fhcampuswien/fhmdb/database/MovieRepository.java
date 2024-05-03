@@ -18,6 +18,10 @@ public class MovieRepository {
         return dao.queryForAll();
     }
 
+    public void addMovie(MovieEntity movie) throws SQLException {
+        dao.create(movie);
+    }
+
 
     public int removeAll() throws SQLException {
         DeleteBuilder<MovieEntity, Long> deleteBuilder = dao.deleteBuilder();

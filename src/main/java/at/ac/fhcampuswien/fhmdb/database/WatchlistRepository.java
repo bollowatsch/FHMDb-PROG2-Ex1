@@ -12,20 +12,32 @@ public class WatchlistRepository {
         this.dao = Database.getDatabase().getWatchlistDao();
     }
 
-    public List<WatchlistMovieEntity> getWatchlist() throws SQLException {
-        return dao.queryForAll();
+    //TODO HANDLE EXCEPTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public List<WatchlistMovieEntity> getWatchlist() {
+        try {
+            return dao.queryForAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public int addToWatchlist(WatchlistMovieEntity movie) throws SQLException {
-        dao.create(movie);
+    public int addToWatchlist(WatchlistMovieEntity movie)  {
+        try {
+            dao.create(movie);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         //TODO: change return statement?
         return 1;
     }
 
-    public int removeFromWatchlist(String apiId) throws SQLException {
-        dao.deleteById(Long.valueOf(apiId));
+    public int removeFromWatchlist(String apiId)  {
+        try {
+            dao.deleteById(Long.valueOf(apiId));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         //TODO: change return statement?
         return 0;
     }
-
 }

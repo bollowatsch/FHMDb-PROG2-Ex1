@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DatabaseTable(tableName = "movie")
-public class MovieEntity extends WatchlistMovieEntity {
+public class MovieEntity {
     @DatabaseField(generatedId = true)
     long id;
     @DatabaseField()

@@ -5,7 +5,6 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-
 import java.sql.SQLException;
 
 public class Database {
@@ -19,12 +18,12 @@ public class Database {
     private Dao<MovieEntity, Long> movieDao;
     private Dao<WatchlistMovieEntity, Long> watchlistDao;
 
-
     //TODO: Exception Handling in Methodensignatur?
     private Database() {
         try {
             createConnectionSource();
             movieDao = DaoManager.createDao(connectionSource, MovieEntity.class);
+            watchlistDao = DaoManager.createDao(connectionSource, WatchlistMovieEntity.class);
             createTables();
         } catch (SQLException e) {
             System.out.println("Error creating database");
@@ -53,6 +52,7 @@ public class Database {
 
     private static void createTables() throws SQLException {
         TableUtils.createTableIfNotExists(connectionSource, MovieEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, WatchlistMovieEntity.class);
     }
 
     public Dao<WatchlistMovieEntity, Long> getWatchlistDao() {
