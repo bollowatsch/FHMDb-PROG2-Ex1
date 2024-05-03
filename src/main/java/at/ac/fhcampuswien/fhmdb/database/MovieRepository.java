@@ -14,8 +14,12 @@ public class MovieRepository {
         this.dao = Database.getDatabase().getMovieDao();
     }
 
-    public List<MovieEntity> getAllMovies() throws SQLException {
-        return dao.queryForAll();
+    public List<MovieEntity> getAllMovies() {
+        try {
+            return dao.queryForAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void addMovie(MovieEntity movie) throws SQLException {

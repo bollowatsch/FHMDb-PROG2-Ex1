@@ -123,45 +123,46 @@ public class MovieEntity {
         return movieEntityList;
     }
 
-    public List<Movie> toMovies(List<MovieEntity> movieEntities) {
+    public static List<Movie> toMovies(List<MovieEntity> movieEntities) {
         MovieBuilder mb = new MovieBuilder();
         ArrayList<Movie> movieList = new ArrayList<>();
 
         for (MovieEntity movieEntity : movieEntities) {
             List<Genre> genres = new ArrayList<Genre>();
+            //BUG: Multiple Genres separated by ", " leads to crash. (Cover this with TestCases)
             for (String genre : movieEntity.getGenres().split(",")) {
                 if (!genre.equals("")) {
                     genres.add(Genre.valueOf(genre));
                 }
             }
-                movieList.add(mb.setId(String.valueOf(movieEntity.getId()))
-                        .setTitle(movieEntity.getTitle())
-                        .setGenres(genres)
-                        .setReleaseYear(movieEntity.getReleaseYear())
-                        .setDescription(movieEntity.getDescription())
-                        .setImgUrl(movieEntity.getImgUrl())
-                        .setLengthInMinutes(movieEntity.getLengthInMinutes())
-                        .setDirectors(new String[]{})
-                        .setWriters(new String[]{})
-                        .setMainCast(new String[]{})
-                        .setRating(movieEntity.getRating())
-                        .build());
-            }
-            return movieList;
+            movieList.add(mb.setId(String.valueOf(movieEntity.getId()))
+                    .setTitle(movieEntity.getTitle())
+                    .setGenres(genres)
+                    .setReleaseYear(movieEntity.getReleaseYear())
+                    .setDescription(movieEntity.getDescription())
+                    .setImgUrl(movieEntity.getImgUrl())
+                    .setLengthInMinutes(movieEntity.getLengthInMinutes())
+                    .setDirectors(new String[]{})
+                    .setWriters(new String[]{})
+                    .setMainCast(new String[]{})
+                    .setRating(movieEntity.getRating())
+                    .build());
         }
-
-        @Override
-        public String toString () {
-            return "MovieEntity{" +
-                    "id=" + id +
-                    ", apiId='" + apiId + '\'' +
-                    ", title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    ", genres='" + genres + '\'' +
-                    ", releaseYear=" + releaseYear +
-                    ", imgUrl='" + imgUrl + '\'' +
-                    ", lengthInMinutes=" + lengthInMinutes +
-                    ", rating=" + rating +
-                    '}';
-        }
+        return movieList;
     }
+
+    @Override
+    public String toString() {
+        return "MovieEntity{" +
+                "id=" + id +
+                ", apiId='" + apiId + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", genres='" + genres + '\'' +
+                ", releaseYear=" + releaseYear +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", lengthInMinutes=" + lengthInMinutes +
+                ", rating=" + rating +
+                '}';
+    }
+}

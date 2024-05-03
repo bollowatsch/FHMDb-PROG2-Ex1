@@ -47,25 +47,22 @@ public class MovieCell extends ListCell<Movie> {
                             : "No genres available"
             );
 
-            //TODO Add button to add movie to watchlist.
             addToWatchlist.setText("★");
-            addToWatchlist.getStyleClass().add("background-yellow");
-
-            HBox.setHgrow(title, Priority.ALWAYS);
-            title.setMaxWidth(Double.MAX_VALUE);
-            head.setPadding(new Insets(0, 10, 0, 0));
-
             removeFromWatchlist.setText("-");
-            removeFromWatchlist.getStyleClass().add("background-yellow");
 
             // color scheme
             title.getStyleClass().add("text-yellow");
             detail.getStyleClass().add("text-white");
             genres.getStyleClass().add("text-white");
             genres.getStyleClass().add("text-italic");
+            addToWatchlist.getStyleClass().add("background-yellow");
+            removeFromWatchlist.getStyleClass().add("background-yellow");
             layout.setBackground(new Background(new BackgroundFill(Color.web("#454545"), null, null)));
 
             // layout
+            HBox.setHgrow(title, Priority.ALWAYS);
+            title.setMaxWidth(Double.MAX_VALUE);
+            head.setPadding(new Insets(0, 10, 0, 0));
             title.fontProperty().set(title.getFont().font(20));
             detail.setMaxWidth(this.getScene().getWidth() - 30);
             detail.setWrapText(true);
