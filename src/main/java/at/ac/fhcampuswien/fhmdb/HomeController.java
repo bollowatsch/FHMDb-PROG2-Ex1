@@ -23,13 +23,14 @@ import java.util.stream.IntStream;
 
 public class HomeController implements Initializable {
     @FXML
-    public JFXButton searchBtn;
+    public JFXButton filterBtn;
 
     @FXML
     public TextField searchField;
 
     @FXML
     public JFXListView<Movie> movieListView;
+    //NOTE: Either load watchlist or standard movies
 
     @FXML
     public JFXComboBox<Genre> genreComboBox;
@@ -50,25 +51,20 @@ public class HomeController implements Initializable {
     public JFXButton switchView;
 
     private final MovieAPI movieAPI = new MovieAPI();
-    private final String URL = "https://prog2.fh-campuswien.ac.at/movies?";
-
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
+    private ObservableList<Movie> watchlist = FXCollections.observableArrayList();
 
-    private Database database = Database.getDatabase();
-    private WatchlistRepository watchlistRepository = new WatchlistRepository();
-    private MovieRepository movieRepository = new MovieRepository();
+    private ViewState state = ViewState.ALL;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //initialize observableList and sort them asc.
-        observableMovies.addAll(movieAPI.get());     // request movies from API
-        observableMovies = sortAscendingByTitle(observableMovies);
+        updateObservableList(FXCollections.observableList(movieAPI.get()));   // request movies from API
 
         // initialize UI stuff
-        movieListView.setItems(observableMovies);   // set data of observable list to list view
-        movieListView.setCellFactory(movieListView -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
+        updateListView(observableMovies);           // set data of observable list to list view
+        movieListView.setCellFactory(movieListView1 -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
         movieListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //FIXME: Hide horizontal scroll bar of listView
 
         genreComboBox.setPromptText("Filter by Genre");
         genreComboBox.getItems().addAll(Genre.values());
@@ -87,42 +83,108 @@ public class HomeController implements Initializable {
             }
         });
 
-        switchView.setOnAction(actionEvent -> {
-            if (switchView.getText().equals("Watchlist")) {
-                //TODO Display watchlist. (read from db using watchlistRepository)
-                observableMovies.clear();
+        switchView.setOnAction(actionEvent -> switchViewState());
 
+        filterBtn.setOnAction(actionEvent -> filter());
 
-            } else {
-                //TODO load from API.
-                observableMovies.clear();
-                observableMovies.addAll(movieAPI.get());
-                observableMovies = sortAscendingByTitle(observableMovies);
-            }
-        });
-
-        searchBtn.setOnAction(actionEvent -> filterMovieView());
         clearBtn.setOnAction(actionEvent -> {
-            searchField.clear();
-            genreComboBox.getSelectionModel().clearSelection();
-            ratingComboBox.getSelectionModel().clearSelection();
-            releaseYearField.getSelectionModel().clearSelection();
-            filterMovieView();
+            clearFields();
+
+            if (state == ViewState.ALL) {
+                updateObservableList(FXCollections.observableList(movieAPI.get()));
+            } else updateObservableList(watchlist);
         });
-        searchField.setOnAction(actionEvent -> filterMovieView());
+
+        searchField.setOnAction(actionEvent -> filter());
     }
 
-    private final ClickEventHandler<Movie> onAddToWatchlistClicked = (clickedItem) -> {
+    private void filter() {
+        String query = searchField.getText().isBlank() ? null : searchField.getText();
+        Genre genre = genreComboBox.getSelectionModel().isEmpty() ? null : genreComboBox.getSelectionModel().getSelectedItem();
+        int releaseYear = releaseYearField.getSelectionModel().isEmpty() ? 0 : releaseYearField.getSelectionModel().getSelectedItem();
+        int rating = ratingComboBox.getSelectionModel().isEmpty() ? 0 : ratingComboBox.getSelectionModel().getSelectedItem();
+
+        if (state == ViewState.ALL) {
+            //filter using API
+            filterByAPI(query, genre, releaseYear, rating);
+        } else {
+            //filter locally
+            filterLocally(query, genre, releaseYear, rating);
+        }
+    }
+
+    private void clearFields() {
+        searchField.clear();
+        genreComboBox.getSelectionModel().clearSelection();
+        ratingComboBox.getSelectionModel().clearSelection();
+        releaseYearField.getSelectionModel().clearSelection();
+    }
+
+    private final ClickEventHandler<MovieCell> onAddToWatchlistClicked = (clickedItem) -> {
         //TODO add movie to watchlist db
+        if (state == ViewState.ALL) {
+            watchlist.add(clickedItem.getItem());
+            System.out.printf("HomeController: Added Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
+        } else {
+            watchlist.remove(clickedItem.getItem());
+            System.out.printf("HomeController: Removed Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
 
-
-        System.out.printf("HomeController: Movie \"%s\" saved to watchlist.\n", clickedItem.getTitle());
+            //return to overview if last element of watchlist is removed.
+            if (watchlist.isEmpty()) {
+                state = ViewState.WATCHLIST;
+                switchViewState();
+            } else updateObservableList(watchlist);
+        }
     };
 
-    public String getMostPopularActor(List<Movie> movies) {
-        if (movies.stream().anyMatch(movie -> movie.getMainCast() == null)) {
-            return null;
+    private void switchViewState() {
+        clearFields();
+
+        if (state == ViewState.ALL) {
+            //Switch to Watchlist View
+            updateObservableList(watchlist);
+            state = ViewState.WATCHLIST;
+            switchView.setText("Home");
+        } else {
+            //Switch to overview.
+            updateObservableList(FXCollections.observableList(movieAPI.get()));
+            state = ViewState.ALL;
+            switchView.setText("Watchlist");
         }
+
+    }
+
+    private void updateObservableList(ObservableList<Movie> movies) {
+        observableMovies.clear();
+        observableMovies.addAll(movies);
+        observableMovies = sortAscendingByTitle(observableMovies);
+    }
+
+    private void updateListView(ObservableList<Movie> movies) {
+        movieListView.setItems(movies);
+    }
+
+    private void filterByAPI(String query, Genre genre, int releaseYear, int ratingFrom) {
+        URLBuilder urlBuilder = new URLBuilder();
+        urlBuilder.setQuery(query).setGenre(genre).setReleaseYear(releaseYear).setRatingFrom(ratingFrom);
+
+        updateObservableList(FXCollections.observableList(movieAPI.get(urlBuilder.build())));
+    }
+
+    private void filterLocally(String query, Genre genre, int releaseYear, int ratingFrom) {
+        ObservableList<Movie> filteredWatchlist = watchlist;
+
+        if (query != null) filteredWatchlist = filterByQuery(filteredWatchlist, query);
+        if (genre != null) filteredWatchlist = filterByGenre(filteredWatchlist, genre);
+        if (releaseYear > 0) filteredWatchlist = filterByReleaseYear(filteredWatchlist, releaseYear);
+        if (ratingFrom > 0) filteredWatchlist = filterByRatingFrom(filteredWatchlist, ratingFrom);
+
+        updateObservableList(filteredWatchlist);
+    }
+
+
+    public String getMostPopularActor(List<Movie> movies) {
+        if (movies.stream().anyMatch(movie -> movie.getMainCast() == null)) return null;
         return movies.stream().flatMap(movie -> Arrays.stream(movie.getMainCast())).collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(null);
     }
 
@@ -138,38 +200,20 @@ public class HomeController implements Initializable {
         return movies.stream().filter(movie -> movie.getReleaseYear() >= startYear && movie.getReleaseYear() <= endYear).collect(Collectors.toList());
     }
 
-    // TODO - add layer to separate UI from API & add tests
-    public void filterMovieView() {
-        URLBuilder urlBuilder = new URLBuilder();
-
-        if (!searchField.getText().isBlank()) {
-            urlBuilder.setQuery(searchField.getText());
-        }
-        if (!genreComboBox.getSelectionModel().isEmpty()) {
-            urlBuilder.setGenre(genreComboBox.getSelectionModel().getSelectedItem().toString());
-        }
-        if (!releaseYearField.getSelectionModel().isEmpty()) {
-            urlBuilder.setReleaseYear(releaseYearField.getSelectionModel().getSelectedItem().toString());
-        }
-        if (!ratingComboBox.getSelectionModel().isEmpty()) {
-            urlBuilder.setRatingFrom(ratingComboBox.getSelectionModel().getSelectedItem().toString());
-        }
-
-        observableMovies.clear();
-        observableMovies.addAll(movieAPI.get(urlBuilder.build()));
-        observableMovies = sortAscendingByTitle(observableMovies);
+    public ObservableList<Movie> filterByQuery(ObservableList<Movie> movies, String query) {
+        return FXCollections.observableList(movies.stream().filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase()) || movie.getTitle().toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList()));
     }
 
     public ObservableList<Movie> filterByGenre(ObservableList<Movie> movies, Genre genre) {
         return FXCollections.observableList(movies.stream().filter(movie -> movie.getGenres().contains(genre)).collect(Collectors.toList()));
     }
 
-    public ObservableList<Movie> filterByQuery(ObservableList<Movie> movies, String query) {
-        return FXCollections.observableList(movies.stream().filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase()) || movie.getTitle().toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList()));
+    public ObservableList<Movie> filterByReleaseYear(ObservableList<Movie> movies, int releaseYear) {
+        return FXCollections.observableList(movies.stream().filter(movie -> movie.getReleaseYear() == releaseYear).collect(Collectors.toList()));
     }
 
-    public ObservableList<Movie> filterByQueryAndGenre(ObservableList<Movie> movies, String query, Genre genre) {
-        return FXCollections.observableList(movies.stream().filter(movie -> movie.getDescription().toLowerCase().contains(query.toLowerCase()) || movie.getTitle().toLowerCase().contains(query.toLowerCase())).filter(movie -> movie.getGenres().contains(genre)).collect(Collectors.toList()));
+    public ObservableList<Movie> filterByRatingFrom(ObservableList<Movie> movies, int ratingFrom) {
+        return FXCollections.observableList(movies.stream().filter(movie -> movie.getRating() >= ratingFrom).collect(Collectors.toList()));
     }
 
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {

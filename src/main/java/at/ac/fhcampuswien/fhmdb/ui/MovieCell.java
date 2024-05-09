@@ -14,14 +14,13 @@ public class MovieCell extends ListCell<Movie> {
     private final Label detail = new Label();
     private final Label genres = new Label();
     private final Button addToWatchlist = new Button();
-    private final Button removeFromWatchlist = new Button();
     private final HBox head = new HBox(title, addToWatchlist);
     private final VBox layout = new VBox(head, detail, genres);
 
-    public MovieCell(ClickEventHandler<Movie> addToWatchlistClicked) {
+    public MovieCell(ClickEventHandler<MovieCell> addToWatchlistClicked) {
         super();
         addToWatchlist.setOnAction(actionEvent -> {
-            addToWatchlistClicked.onClick(getItem());
+            addToWatchlistClicked.onClick(this);
         });
     }
 
@@ -47,8 +46,8 @@ public class MovieCell extends ListCell<Movie> {
                             : "No genres available"
             );
 
+
             addToWatchlist.setText("★");
-            removeFromWatchlist.setText("-");
 
             // color scheme
             title.getStyleClass().add("text-yellow");
@@ -56,7 +55,6 @@ public class MovieCell extends ListCell<Movie> {
             genres.getStyleClass().add("text-white");
             genres.getStyleClass().add("text-italic");
             addToWatchlist.getStyleClass().add("background-yellow");
-            removeFromWatchlist.getStyleClass().add("background-yellow");
             layout.setBackground(new Background(new BackgroundFill(Color.web("#454545"), null, null)));
 
             // layout
@@ -64,7 +62,7 @@ public class MovieCell extends ListCell<Movie> {
             title.setMaxWidth(Double.MAX_VALUE);
             head.setPadding(new Insets(0, 10, 0, 0));
             title.fontProperty().set(title.getFont().font(20));
-            detail.setMaxWidth(this.getScene().getWidth() - 30);
+            detail.setMaxWidth(this.getScene().getWidth() - 40);
             detail.setWrapText(true);
             layout.setPadding(new Insets(10));
             layout.spacingProperty().set(10);

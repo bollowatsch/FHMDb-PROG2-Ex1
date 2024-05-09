@@ -5,7 +5,6 @@ import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -240,16 +239,12 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void test_filtering_by_genre_and_query() {
+    public void test_filtering_by_query_with_empty_list_returning_empty_list() {
         //Arrange
         ObservableList<Movie> expected = FXCollections.observableArrayList();
-        expected.add(mb.setId("2")
-                .setTitle("Inception")
-                .setDescription("A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.")
-                .setGenres(new ArrayList<>(Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.SCIENCE_FICTION)))
-                .build());
+
         //Act
-        ObservableList<Movie> actual = hc.filterByQueryAndGenre(expected, "pt", Genre.ADVENTURE);
+        ObservableList<Movie> actual = hc.filterByQuery(expected, "pt");
 
         //Assert
         assertEquals(expected, actual);

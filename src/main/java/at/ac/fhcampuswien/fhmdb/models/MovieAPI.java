@@ -27,15 +27,14 @@ public class MovieAPI {
                 .header("User-Agent", "http.agent")
                 .build();
 
-        try (Response res = client.newCall(request).execute()){
+        try (Response res = client.newCall(request).execute()) {
             assert res.body() != null;
 
             Gson gson = new Gson();
-            Type collectionType = new TypeToken<List<Movie>>(){}.getType();
-            System.out.println("NOTE: Movies loaded from API.");
+            Type collectionType = new TypeToken<List<Movie>>() {}.getType();
             return gson.fromJson(res.body().string(), collectionType);
         } catch (IOException e) {
-            System.out.println("NOTE: Movies loaded from database.");
+            //load movies from db
             return MovieEntity.toMovies(repository.getAllMovies());
         }
     }

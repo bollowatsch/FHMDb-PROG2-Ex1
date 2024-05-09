@@ -45,7 +45,4 @@ public class MovieRepository {
         dao.create(movieEntities);
         return movieEntities.size();
     }
-
-
-
 }

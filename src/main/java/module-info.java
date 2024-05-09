@@ -7,6 +7,7 @@ module at.ac.fhcampuswien.fhmdb {
     requires okhttp3;
     requires com.google.gson;
     requires java.sql;
+    requires com.h2database;
 
     opens at.ac.fhcampuswien.fhmdb to javafx.fxml;
     opens at.ac.fhcampuswien.fhmdb.models to com.google.gson;

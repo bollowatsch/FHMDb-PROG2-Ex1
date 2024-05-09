@@ -1,27 +1,29 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
 public class URLBuilder {
-    private final String URL = "https://prog2.fh-campuswien.ac.at/movies?";
+    final String URL = "https://prog2.fh-campuswien.ac.at/movies?";
     private String query;
-    private String genre;
-    private String releaseYear;
-    private String ratingFrom;
+    private Genre genre;
+    private int releaseYear;
+    private int ratingFrom;
 
     private void reset() {
         query = null;
         genre = null;
-        releaseYear = null;
-        ratingFrom = null;
+        releaseYear = 0;
+        ratingFrom = 0;
     }
 
-    public URLBuilder() {reset();}
+    public URLBuilder() {
+        reset();
+    }
 
     public String build() {
         StringBuilder url = new StringBuilder(URL);
         if (query != null) url.append("&query=").append(query);
         if (genre != null) url.append("&genre=").append(genre);
-        if (releaseYear != null) url.append("&releaseYear=").append(releaseYear);
-        if (ratingFrom != null) url.append("&ratingFrom=").append(ratingFrom);
+        if (releaseYear != 0) url.append("&releaseYear=").append(releaseYear);
+        if (ratingFrom != 0) url.append("&ratingFrom=").append(ratingFrom);
         // delete unnecessary & after base url
         if (url.length() > URL.length()) url.deleteCharAt(URL.length());
 
@@ -31,19 +33,24 @@ public class URLBuilder {
     }
 
 
-    public void setQuery(String query) {
+    public URLBuilder setQuery(String query) {
         this.query = query;
+        return this;
     }
 
-    public void setGenre(String genre) {
+    public URLBuilder setGenre(Genre genre) {
         this.genre = genre;
+        return this;
     }
 
-    public void setReleaseYear(String releaseYear) {
+    public URLBuilder setReleaseYear(int releaseYear) {
         this.releaseYear = releaseYear;
+        return this;
+
     }
 
-    public void setRatingFrom(String ratingFrom) {
+    public URLBuilder setRatingFrom(int ratingFrom) {
         this.ratingFrom = ratingFrom;
+        return this;
     }
 }

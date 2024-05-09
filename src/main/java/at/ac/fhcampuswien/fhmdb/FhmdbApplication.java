@@ -1,6 +1,5 @@
 package at.ac.fhcampuswien.fhmdb;
 
-import at.ac.fhcampuswien.fhmdb.database.Database;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +20,7 @@ public class FhmdbApplication extends Application {
 
         //test database creation - just for testing
         //TODO: delete after testing
+
         /*
         Database db = Database.getDatabase();
         try {
@@ -28,7 +28,7 @@ public class FhmdbApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-         */
+        */
 
     }
 
