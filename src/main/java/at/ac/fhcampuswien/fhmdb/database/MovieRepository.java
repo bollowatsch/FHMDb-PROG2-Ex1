@@ -33,12 +33,11 @@ public class MovieRepository {
         return rowsDeleted;
     }
 
-    //TODO: implement method
-    /*
-    public MovieEntity getMovie() {
-        return dao.queryForId();
+
+    public MovieEntity getMovie(long id) throws SQLException {
+        return dao.queryForId(id);
     }
-     */
+
 
     public int addAllMovies(List<Movie> movies) throws SQLException {
         List<MovieEntity> movieEntities = MovieEntity.fromMovies(movies);

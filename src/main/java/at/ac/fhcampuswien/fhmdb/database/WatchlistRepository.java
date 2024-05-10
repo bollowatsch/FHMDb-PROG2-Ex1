@@ -17,9 +17,9 @@ public class WatchlistRepository {
     }
 
     public int addToWatchlist(WatchlistMovieEntity movie) throws SQLException {
-        dao.create(movie);
+        return dao.create(movie);
         //TODO: change return statement?
-        return 1;
+        //return 1;
     }
 
     public int removeFromWatchlist(String apiId) throws SQLException {

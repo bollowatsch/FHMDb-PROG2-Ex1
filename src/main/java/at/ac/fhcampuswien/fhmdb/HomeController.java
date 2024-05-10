@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.fhmdb;
 
 import at.ac.fhcampuswien.fhmdb.database.Database;
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.models.*;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
@@ -16,6 +17,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,6 +57,9 @@ public class HomeController implements Initializable {
     private ObservableList<Movie> watchlist = FXCollections.observableArrayList();
 
     private ViewState state = ViewState.ALL;
+
+    WatchlistRepository watchlistRepository;
+    List<WatchlistMovieEntity> watchlistMovieEntityList = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -96,6 +101,9 @@ public class HomeController implements Initializable {
         });
 
         searchField.setOnAction(actionEvent -> filter());
+
+        //initialize Watchlist
+        watchlistRepository = new WatchlistRepository();
     }
 
     private void filter() {
@@ -121,12 +129,23 @@ public class HomeController implements Initializable {
     }
 
     private final ClickEventHandler<MovieCell> onAddToWatchlistClicked = (clickedItem) -> {
-        //TODO add movie to watchlist db
+        Movie movie = clickedItem.getItem();
+        WatchlistMovieEntity watchlistMovie = new WatchlistMovieEntity(movie.getId());
         if (state == ViewState.ALL) {
             watchlist.add(clickedItem.getItem());
+            try {
+                watchlistRepository.addToWatchlist(watchlistMovie);
+            } catch (SQLException e) {
+                //TODO exception handling
+            }
             System.out.printf("HomeController: Added Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
         } else {
             watchlist.remove(clickedItem.getItem());
+            try {
+                watchlistRepository.removeFromWatchlist(movie.getId());
+            } catch (SQLException e) {
+                //TODO exception handling
+            }
             System.out.printf("HomeController: Removed Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
 
             //return to overview if last element of watchlist is removed.
@@ -142,9 +161,11 @@ public class HomeController implements Initializable {
 
         if (state == ViewState.ALL) {
             //Switch to Watchlist View
+            // TODO insert into watchlist observable form DB
             updateObservableList(watchlist);
             state = ViewState.WATCHLIST;
             switchView.setText("Home");
+
         } else {
             //Switch to overview.
             updateObservableList(FXCollections.observableList(movieAPI.get()));
