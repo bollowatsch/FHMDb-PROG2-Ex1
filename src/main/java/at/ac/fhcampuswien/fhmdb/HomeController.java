@@ -13,6 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
@@ -132,21 +134,31 @@ public class HomeController implements Initializable {
         Movie movie = clickedItem.getItem();
         WatchlistMovieEntity watchlistMovie = new WatchlistMovieEntity(movie.getId());
         if (state == ViewState.ALL) {
+            if(watchlist.contains(clickedItem.getItem()))
+                return;
             watchlist.add(clickedItem.getItem());
             try {
                 watchlistRepository.addToWatchlist(watchlistMovie);
             } catch (SQLException e) {
-                //TODO exception handling
+                Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to add the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
+                alert.showAndWait();
+                e.printStackTrace();
+                //TODO more exception handling?
             }
-            System.out.printf("HomeController: Added Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
+            //TODO delete print statements or use logging
+            //System.out.printf("HomeController: Added Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
         } else {
             watchlist.remove(clickedItem.getItem());
             try {
                 watchlistRepository.removeFromWatchlist(movie.getId());
             } catch (SQLException e) {
-                //TODO exception handling
+                Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to delete the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
+                alert.showAndWait();
+                e.printStackTrace();
+                //TODO more exception handling?
             }
-            System.out.printf("HomeController: Removed Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
+            //TODO delete print statements or use logging
+            //System.out.printf("HomeController: Removed Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
 
             //return to overview if last element of watchlist is removed.
             if (watchlist.isEmpty()) {
