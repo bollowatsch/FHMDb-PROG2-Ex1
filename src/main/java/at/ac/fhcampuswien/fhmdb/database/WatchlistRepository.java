@@ -1,7 +1,9 @@
 package at.ac.fhcampuswien.fhmdb.database;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 
+import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -16,15 +18,17 @@ public class WatchlistRepository {
         return dao.queryForAll();
     }
 
-    public int addToWatchlist(WatchlistMovieEntity movie) throws SQLException {
-        return dao.create(movie);
-        //TODO: change return statement?
-        //return 1;
+    public void addToWatchlist(WatchlistMovieEntity movie) throws SQLException{
+        if(dao.create(movie) != 1)
+            throw new SQLException("Something went wrong while adding the movie with the apiId \"" + movie.apiId + "\" to the watchlist table");
     }
 
-    public int removeFromWatchlist(String apiId) throws SQLException {
-        dao.deleteBuilder().where().eq("apiId",apiId);
-        //TODO: change return statement?
-        return 0;
+    public void removeFromWatchlist(String apiId) throws SQLException {
+        DeleteBuilder<WatchlistMovieEntity, Long> deleteBuilder = dao.deleteBuilder();
+        deleteBuilder.where().eq("apiId", apiId);
+       if(deleteBuilder.delete() != 1)
+            throw new SQLException("Something went wrong while deleting the movie with the apiId \"" + apiId + "\" from the watchlist table.");
+
     }
+
 }
