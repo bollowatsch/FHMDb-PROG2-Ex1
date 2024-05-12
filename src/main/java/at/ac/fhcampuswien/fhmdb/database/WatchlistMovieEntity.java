@@ -14,6 +14,10 @@ public class WatchlistMovieEntity {
         // ORMLite needs a no-arg constructor
     }
 
+    public String getApiId (){
+        return apiId;
+    }
+
     public WatchlistMovieEntity(String apiId) {
         this.apiId = apiId;
     }

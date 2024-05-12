@@ -106,6 +106,15 @@ public class HomeController implements Initializable {
 
         //initialize Watchlist
         watchlistRepository = new WatchlistRepository();
+        // add database values to observableList
+        try {
+            List<String> apiIds = watchlistRepository.getWatchlist().stream().map(WatchlistMovieEntity::getApiId).toList();
+            watchlist.addAll(observableMovies.stream().filter(m -> apiIds.contains(m.getId())).toList());
+        } catch (SQLException e) {
+            //TODO exception handling
+            // what happens, if apiId is not available in MovieAPI? -> edge case
+            throw new RuntimeException(e);
+        }
     }
 
     private void filter() {
