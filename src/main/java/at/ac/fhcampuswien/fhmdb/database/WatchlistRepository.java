@@ -23,7 +23,7 @@ public class WatchlistRepository {
     }
 
     public int removeFromWatchlist(String apiId) throws SQLException {
-        dao.deleteById(Long.valueOf(apiId));
+        dao.deleteBuilder().where().eq("apiId",apiId);
         //TODO: change return statement?
         return 0;
     }
