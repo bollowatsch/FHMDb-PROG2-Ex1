@@ -61,13 +61,17 @@ public class HomeController implements Initializable {
     private ViewState state = ViewState.ALL;
 
     WatchlistRepository watchlistRepository;
-    List<WatchlistMovieEntity> watchlistMovieEntityList = new ArrayList<>();
+    MovieRepository movieRepository;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //initialize movie DB
+        movieRepository = new MovieRepository();
         //initialize observableList and sort them asc.
         updateObservableList(FXCollections.observableList(movieAPI.get()));   // request movies from API
 
+        //cache movies from API call in DB
+        cacheDB(observableMovies);
         // initialize UI stuff
         updateListView(observableMovies);           // set data of observable list to list view
         movieListView.setCellFactory(movieListView1 -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
@@ -117,6 +121,7 @@ public class HomeController implements Initializable {
         }
     }
 
+
     private void filter() {
         String query = searchField.getText().isBlank() ? null : searchField.getText();
         Genre genre = genreComboBox.getSelectionModel().isEmpty() ? null : genreComboBox.getSelectionModel().getSelectedItem();
@@ -129,6 +134,19 @@ public class HomeController implements Initializable {
         } else {
             //filter locally
             filterLocally(query, genre, releaseYear, rating);
+        }
+    }
+
+    private void cacheDB(List<Movie> movies) {
+        try {
+            movieRepository.removeAll();
+            movieRepository.addAllMovies(movies);
+        } catch (SQLException e) {
+            String errorMessage = "Error caching movies in the database: " + e.getMessage();
+            System.err.println(errorMessage);
+            e.printStackTrace();
+            //TODO better exception handling needed?
+            //throw new RuntimeException(e);
         }
     }
 
@@ -182,7 +200,6 @@ public class HomeController implements Initializable {
 
         if (state == ViewState.ALL) {
             //Switch to Watchlist View
-            // TODO insert into watchlist observable form DB
             updateObservableList(watchlist);
             state = ViewState.WATCHLIST;
             switchView.setText("Home");

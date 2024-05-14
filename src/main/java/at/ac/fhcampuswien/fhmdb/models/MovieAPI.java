@@ -33,11 +33,8 @@ public class MovieAPI {
 
             Gson gson = new Gson();
             Type collectionType = new TypeToken<List<Movie>>() {}.getType();
-            List<Movie> movies = gson.fromJson(res.body().string(), collectionType);
-            repository.removeAll();
-            repository.addAllMovies(movies);
-            return movies;
-        } catch (IOException | SQLException e) {
+            return gson.fromJson(res.body().string(), collectionType);
+        } catch (IOException e) {
             //load movies from db
             return MovieEntity.toMovies(repository.getAllMovies());
         }
