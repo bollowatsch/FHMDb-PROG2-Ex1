@@ -10,6 +10,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MovieAPI {
@@ -32,8 +33,11 @@ public class MovieAPI {
 
             Gson gson = new Gson();
             Type collectionType = new TypeToken<List<Movie>>() {}.getType();
-            return gson.fromJson(res.body().string(), collectionType);
-        } catch (IOException e) {
+            List<Movie> movies = gson.fromJson(res.body().string(), collectionType);
+            repository.removeAll();
+            repository.addAllMovies(movies);
+            return movies;
+        } catch (IOException | SQLException e) {
             //load movies from db
             return MovieEntity.toMovies(repository.getAllMovies());
         }

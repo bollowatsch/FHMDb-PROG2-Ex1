@@ -67,8 +67,7 @@ public class MovieEntity {
     }
 
     protected MovieEntity(Movie movie) {
-        this.id = Long.parseLong(movie.getId());
-        this.apiId = "";
+        this.apiId = movie.getId();
         this.title = movie.getTitle();
         this.description = movie.getDescription();
         this.genres = this.genresToString(movie.getGenres());
