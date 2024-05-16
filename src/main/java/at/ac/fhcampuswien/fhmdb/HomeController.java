@@ -1,11 +1,12 @@
 package at.ac.fhcampuswien.fhmdb;
 
-import at.ac.fhcampuswien.fhmdb.database.Database;
+import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
 import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.models.*;
 import at.ac.fhcampuswien.fhmdb.models.exception.DatabaseException;
+import at.ac.fhcampuswien.fhmdb.models.exception.MovieAPIException;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -20,7 +21,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -57,7 +57,7 @@ public class HomeController implements Initializable {
 
     private MovieAPI movieAPI;
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
-    private ObservableList<Movie> watchlist = FXCollections.observableArrayList();
+    private final ObservableList<Movie> watchlist = FXCollections.observableArrayList();
 
     private ViewState state = ViewState.ALL;
 
@@ -70,18 +70,41 @@ public class HomeController implements Initializable {
         try {
             movieAPI = MovieAPI.getMovieAPI();
             movieRepository = new MovieRepository();
-        } catch (DatabaseException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (DatabaseException | MovieAPIException err) {
+            createErrorAlert("Following error occurred: " + err.getMessage());
         }
+
         //initialize observableList and sort them asc.
-        updateObservableList(FXCollections.observableList(movieAPI.get()));   // request movies from API
+        try {
+            updateObservableList(FXCollections.observableList(movieAPI.get()));   // request movies from API
+        } catch (MovieAPIException err) {
+            createErrorAlert(err.getMessage());
+        }
 
         //cache movies from API call in DB
         cacheDB(observableMovies);
-        // initialize UI stuff
         updateListView(observableMovies);           // set data of observable list to list view
+        initializeComponents();
+
+        //initialize Watchlist
+        try {
+            watchlistRepository = new WatchlistRepository();
+        } catch (DatabaseException err) {
+
+            System.out.println(err.getMessage());
+        }
+        // add database values to observableList
+        try {
+            List<String> apiIds = watchlistRepository.getWatchlist().stream().map(WatchlistMovieEntity::getApiId).toList();
+            watchlist.addAll(observableMovies.stream().filter(m -> apiIds.contains(m.getId())).toList());
+        } catch (DatabaseException err) {
+            //TODO exception handling
+            // what happens, if apiId is not available in MovieAPI? -> edge case
+            throw new RuntimeException(err);
+        }
+    }
+
+    private void initializeComponents() {
         movieListView.setCellFactory(movieListView1 -> new MovieCell(onAddToWatchlistClicked)); // use custom cell factory to display data
         movieListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -94,6 +117,10 @@ public class HomeController implements Initializable {
         releaseYearField.setPromptText("Filter by Release Year");
         releaseYearField.getItems().setAll(IntStream.rangeClosed(1940, 2024).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toList()));
 
+        switchView.setOnAction(actionEvent -> switchViewState());
+        searchField.setOnAction(actionEvent -> filter());
+
+        filterBtn.setOnAction(actionEvent -> filter());
         sortBtn.setOnAction(actionEvent -> {
             if (sortBtn.getText().equals("Sort ↓")) {
                 observableMovies = sortAscendingByTitle(observableMovies);
@@ -101,88 +128,33 @@ public class HomeController implements Initializable {
                 observableMovies = sortDescendingByTitle(observableMovies);
             }
         });
-
-        switchView.setOnAction(actionEvent -> switchViewState());
-
-        filterBtn.setOnAction(actionEvent -> filter());
-
         clearBtn.setOnAction(actionEvent -> {
             clearFields();
 
             if (state == ViewState.ALL) {
-                updateObservableList(FXCollections.observableList(movieAPI.get()));
+                try {
+                    updateObservableList(FXCollections.observableList(movieAPI.get()));
+                } catch (MovieAPIException err) {
+                    createErrorAlert(err.getMessage());
+                }
             } else updateObservableList(watchlist);
         });
-
-        searchField.setOnAction(actionEvent -> filter());
-
-        //initialize Watchlist
-        try {
-            watchlistRepository = new WatchlistRepository();
-        } catch (DatabaseException e) {
-            System.out.println(e.getMessage());
-        }
-        // add database values to observableList
-        try {
-            List<String> apiIds = watchlistRepository.getWatchlist().stream().map(WatchlistMovieEntity::getApiId).toList();
-            watchlist.addAll(observableMovies.stream().filter(m -> apiIds.contains(m.getId())).toList());
-        } catch (SQLException e) {
-            //TODO exception handling
-            // what happens, if apiId is not available in MovieAPI? -> edge case
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    private void filter() {
-        String query = searchField.getText().isBlank() ? null : searchField.getText();
-        Genre genre = genreComboBox.getSelectionModel().isEmpty() ? null : genreComboBox.getSelectionModel().getSelectedItem();
-        int releaseYear = releaseYearField.getSelectionModel().isEmpty() ? 0 : releaseYearField.getSelectionModel().getSelectedItem();
-        int rating = ratingComboBox.getSelectionModel().isEmpty() ? 0 : ratingComboBox.getSelectionModel().getSelectedItem();
-
-        if (state == ViewState.ALL) {
-            //filter using API
-            filterByAPI(query, genre, releaseYear, rating);
-        } else {
-            //filter locally
-            filterLocally(query, genre, releaseYear, rating);
-        }
-    }
-
-    private void cacheDB(List<Movie> movies) {
-        try {
-            movieRepository.removeAll();
-            movieRepository.addAllMovies(movies);
-        } catch (SQLException e) {
-            String errorMessage = "Error caching movies in the database: " + e.getMessage();
-            System.err.println(errorMessage);
-            e.printStackTrace();
-            //TODO better exception handling needed?
-            //throw new RuntimeException(e);
-        }
-    }
-
-    private void clearFields() {
-        searchField.clear();
-        genreComboBox.getSelectionModel().clearSelection();
-        ratingComboBox.getSelectionModel().clearSelection();
-        releaseYearField.getSelectionModel().clearSelection();
     }
 
     private final ClickEventHandler<MovieCell> onAddToWatchlistClicked = (clickedItem) -> {
         Movie movie = clickedItem.getItem();
         WatchlistMovieEntity watchlistMovie = new WatchlistMovieEntity(movie.getId());
         if (state == ViewState.ALL) {
-            if(watchlist.contains(clickedItem.getItem()))
-                return;
+            if (watchlist.contains(clickedItem.getItem())) return;
             watchlist.add(clickedItem.getItem());
             try {
                 watchlistRepository.addToWatchlist(watchlistMovie);
-            } catch (SQLException e) {
+            } catch (DatabaseException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to add the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
                 alert.showAndWait();
-                e.printStackTrace();
                 //TODO more exception handling?
+
+                throw new RuntimeException(e);
             }
             //TODO delete print statements or use logging
             //System.out.printf("HomeController: Added Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
@@ -190,14 +162,11 @@ public class HomeController implements Initializable {
             watchlist.remove(clickedItem.getItem());
             try {
                 watchlistRepository.removeFromWatchlist(movie.getId());
-            } catch (SQLException e) {
+            } catch (DatabaseException err) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to delete the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
                 alert.showAndWait();
-                e.printStackTrace();
                 //TODO more exception handling?
             }
-            //TODO delete print statements or use logging
-            //System.out.printf("HomeController: Removed Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
 
             //return to overview if last element of watchlist is removed.
             if (watchlist.isEmpty()) {
@@ -218,28 +187,48 @@ public class HomeController implements Initializable {
 
         } else {
             //Switch to overview.
-            updateObservableList(FXCollections.observableList(movieAPI.get()));
+            try {
+                updateObservableList(FXCollections.observableList(movieAPI.get()));
+            } catch (MovieAPIException err) {
+                createErrorAlert(err.getMessage());
+            }
             state = ViewState.ALL;
             switchView.setText("Watchlist");
         }
-
     }
 
-    private void updateObservableList(ObservableList<Movie> movies) {
-        observableMovies.clear();
-        observableMovies.addAll(movies);
-        observableMovies = sortAscendingByTitle(observableMovies);
+    private void cacheDB(List<Movie> movies) {
+        try {
+            movieRepository.removeAll();
+            movieRepository.addAllMovies(movies);
+        } catch (DatabaseException err) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error caching movies in the database: " + err.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+        }
     }
 
-    private void updateListView(ObservableList<Movie> movies) {
-        movieListView.setItems(movies);
+    private void filter() {
+        String query = searchField.getText().isBlank() ? null : searchField.getText();
+        Genre genre = genreComboBox.getSelectionModel().isEmpty() ? null : genreComboBox.getSelectionModel().getSelectedItem();
+        int releaseYear = releaseYearField.getSelectionModel().isEmpty() ? 0 : releaseYearField.getSelectionModel().getSelectedItem();
+        int rating = ratingComboBox.getSelectionModel().isEmpty() ? 0 : ratingComboBox.getSelectionModel().getSelectedItem();
+
+        if (state == ViewState.ALL) {
+            filterByAPI(query, genre, releaseYear, rating);     //filter using API
+        } else {
+            filterLocally(query, genre, releaseYear, rating);   //filter locally
+        }
     }
 
     private void filterByAPI(String query, Genre genre, int releaseYear, int ratingFrom) {
         URLBuilder urlBuilder = new URLBuilder();
         urlBuilder.setQuery(query).setGenre(genre).setReleaseYear(releaseYear).setRatingFrom(ratingFrom);
 
-        updateObservableList(FXCollections.observableList(movieAPI.get(urlBuilder.build())));
+        try {
+            updateObservableList(FXCollections.observableList(movieAPI.get(urlBuilder.build())));
+        } catch (MovieAPIException err) {
+            createWarningAlert("Something went wrong while filtering: " + err.getMessage());
+        }
     }
 
     private void filterLocally(String query, Genre genre, int releaseYear, int ratingFrom) {
@@ -253,6 +242,22 @@ public class HomeController implements Initializable {
         updateObservableList(filteredWatchlist);
     }
 
+    private void clearFields() {
+        searchField.clear();
+        genreComboBox.getSelectionModel().clearSelection();
+        ratingComboBox.getSelectionModel().clearSelection();
+        releaseYearField.getSelectionModel().clearSelection();
+    }
+
+    private void updateObservableList(ObservableList<Movie> movies) {
+        observableMovies.clear();
+        observableMovies.addAll(movies);
+        observableMovies = sortAscendingByTitle(observableMovies);
+    }
+
+    private void updateListView(ObservableList<Movie> movies) {
+        movieListView.setItems(movies);
+    }
 
     public String getMostPopularActor(List<Movie> movies) {
         if (movies.stream().anyMatch(movie -> movie.getMainCast() == null)) return null;
@@ -304,5 +309,15 @@ public class HomeController implements Initializable {
         if (sortBtn != null) {
             sortBtn.setText(text);
         }
+    }
+
+    private void createWarningAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
+        alert.showAndWait();
+    }
+
+    private void createErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        alert.showAndWait();
     }
 }
