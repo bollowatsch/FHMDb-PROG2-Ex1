@@ -5,6 +5,7 @@ import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
 import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.models.*;
+import at.ac.fhcampuswien.fhmdb.models.exception.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -54,7 +55,7 @@ public class HomeController implements Initializable {
     @FXML
     public JFXButton switchView;
 
-    private final MovieAPI movieAPI = new MovieAPI();
+    private MovieAPI movieAPI;
     private ObservableList<Movie> observableMovies = FXCollections.observableArrayList();   // automatically updates corresponding UI elements when underlying data changes
     private ObservableList<Movie> watchlist = FXCollections.observableArrayList();
 
@@ -66,7 +67,14 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //initialize movie DB
-        movieRepository = new MovieRepository();
+        try {
+            movieAPI = MovieAPI.getMovieAPI();
+            movieRepository = new MovieRepository();
+        } catch (DatabaseException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         //initialize observableList and sort them asc.
         updateObservableList(FXCollections.observableList(movieAPI.get()));   // request movies from API
 
@@ -109,7 +117,11 @@ public class HomeController implements Initializable {
         searchField.setOnAction(actionEvent -> filter());
 
         //initialize Watchlist
-        watchlistRepository = new WatchlistRepository();
+        try {
+            watchlistRepository = new WatchlistRepository();
+        } catch (DatabaseException e) {
+            System.out.println(e.getMessage());
+        }
         // add database values to observableList
         try {
             List<String> apiIds = watchlistRepository.getWatchlist().stream().map(WatchlistMovieEntity::getApiId).toList();

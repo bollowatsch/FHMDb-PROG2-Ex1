@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.fhmdb.models;
 
 import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.models.exception.DatabaseException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.scene.control.Alert;
@@ -10,6 +11,7 @@ import javafx.stage.Popup;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.h2.expression.function.table.LinkSchemaFunction;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -17,8 +19,20 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class MovieAPI {
-    private final OkHttpClient client = new OkHttpClient();
-    private final MovieRepository repository = new MovieRepository();
+    private static OkHttpClient client;
+    private static MovieRepository repository;
+    private static MovieAPI instance;
+
+    private MovieAPI(){}
+
+    public static MovieAPI getMovieAPI () throws DatabaseException {
+        if (instance == null) {
+            client = new OkHttpClient();
+            repository = new MovieRepository();
+            instance = new MovieAPI();
+        }
+        return instance;
+    }
 
     public List<Movie> get() {
         URLBuilder urlBuilder = new URLBuilder();
