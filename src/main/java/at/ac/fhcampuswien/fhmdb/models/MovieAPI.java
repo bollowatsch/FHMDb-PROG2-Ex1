@@ -4,6 +4,9 @@ import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
 import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Popup;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -36,6 +39,8 @@ public class MovieAPI {
             return gson.fromJson(res.body().string(), collectionType);
         } catch (IOException e) {
             //load movies from db
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No network, movies are laoded form cache!");
+            alert.show();
             return MovieEntity.toMovies(repository.getAllMovies());
         }
     }

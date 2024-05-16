@@ -129,7 +129,7 @@ public class MovieEntity {
         for (MovieEntity movieEntity : movieEntities) {
             List<Genre> genres = new ArrayList<Genre>();
             //BUG: Multiple Genres separated by ", " leads to crash. (Cover this with TestCases)
-            for (String genre : movieEntity.getGenres().split(", ")) {
+            for (String genre : movieEntity.getGenres().split(",")) {
                 if (!genre.equals("")) {
                     genres.add(Genre.valueOf(genre));
                 }
