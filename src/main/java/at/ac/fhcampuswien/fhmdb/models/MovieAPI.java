@@ -39,7 +39,7 @@ public class MovieAPI {
             return gson.fromJson(res.body().string(), collectionType);
         } catch (IOException e) {
             //load movies from db
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No network, movies are laoded form cache!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No network, movies are loaded from cache!");
             alert.show();
             return MovieEntity.toMovies(repository.getAllMovies());
         }
