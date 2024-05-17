@@ -139,7 +139,7 @@ public class HomeController implements Initializable {
             try {
                 updateObservableList(FXCollections.observableList(MovieEntity.toMovies(movieRepository.getAllMovies())));
             } catch (DatabaseException e) {
-                createErrorAlert("Movies couldn't be fetched from the database. " + err.getMessage());
+                createErrorAlert("Movies couldn't be fetched from the database. " + e.getMessage());
             }
         }
     }
