@@ -35,7 +35,6 @@ public class HomeController implements Initializable {
 
     @FXML
     public JFXListView<Movie> movieListView;
-    //NOTE: Either load watchlist or standard movies
 
     @FXML
     public JFXComboBox<Genre> genreComboBox;
@@ -61,8 +60,8 @@ public class HomeController implements Initializable {
 
     private ViewState state = ViewState.ALL;
 
-    WatchlistRepository watchlistRepository;
-    MovieRepository movieRepository;
+    private WatchlistRepository watchlistRepository;
+    private MovieRepository movieRepository;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -74,20 +73,16 @@ public class HomeController implements Initializable {
             createPopup("Following error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
         }
 
-        //initialize observableList and sort them asc.
-        getMovies();
-
-        //cache movies from API call in DB
-        cacheDB(observableMovies);
-        updateListView(observableMovies);           // set data of observable list to list view
+        getMovies();                            //initialize observableList and sort them asc.
+        cacheDB(observableMovies);              //cache movies from API call in DB
+        updateListView(observableMovies);       // set data of observable list to list view
         initializeComponents();
 
         //initialize Watchlist
         try {
             watchlistRepository = new WatchlistRepository();
         } catch (DatabaseException e) {
-
-            System.out.println(e.getMessage());
+            createPopup(e.getMessage(), Alert.AlertType.ERROR);
         }
         // add database values to observableList
         try {
@@ -150,20 +145,19 @@ public class HomeController implements Initializable {
         WatchlistMovieEntity watchlistMovie = new WatchlistMovieEntity(movie.getId());
         if (state == ViewState.ALL) {
             if (watchlist.contains(clickedItem.getItem())) return;
+
             watchlist.add(clickedItem.getItem());
             try {
                 watchlistRepository.addToWatchlist(watchlistMovie);
             } catch (DatabaseException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to add the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
-                alert.showAndWait();
+                createPopup("An error occurred while trying to add the movie " + movie.getTitle() + "to the watchlist. PLease try again later!", Alert.AlertType.ERROR);
             }
         } else {
             watchlist.remove(clickedItem.getItem());
             try {
                 watchlistRepository.removeFromWatchlist(movie.getId());
             } catch (DatabaseException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to delete the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
-                alert.showAndWait();
+                createPopup("An error occurred while trying to delete the movie " + movie.getTitle() + "from the watchlist. PLease try again later!", Alert.AlertType.ERROR);
             }
 
             //return to overview if last element of watchlist is removed.
@@ -196,8 +190,7 @@ public class HomeController implements Initializable {
             movieRepository.removeAll();
             movieRepository.addAllMovies(movies);
         } catch (DatabaseException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error caching movies in the database: " + e.getMessage(), ButtonType.OK);
-            alert.showAndWait();
+            createPopup("Error caching movies in the database: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
