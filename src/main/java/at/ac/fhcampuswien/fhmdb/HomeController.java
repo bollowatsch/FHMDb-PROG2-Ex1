@@ -70,8 +70,8 @@ public class HomeController implements Initializable {
         try {
             movieAPI = MovieAPI.getMovieAPI();
             movieRepository = new MovieRepository();
-        } catch (DatabaseException | MovieAPIException err) {
-            createErrorAlert("Following error occurred: " + err.getMessage());
+        } catch (DatabaseException | MovieAPIException e) {
+            createPopup("Following error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
         }
 
         //initialize observableList and sort them asc.
@@ -85,16 +85,16 @@ public class HomeController implements Initializable {
         //initialize Watchlist
         try {
             watchlistRepository = new WatchlistRepository();
-        } catch (DatabaseException err) {
+        } catch (DatabaseException e) {
 
-            System.out.println(err.getMessage());
+            System.out.println(e.getMessage());
         }
         // add database values to observableList
         try {
             List<String> apiIds = watchlistRepository.getWatchlist().stream().map(WatchlistMovieEntity::getApiId).toList();
             watchlist.addAll(observableMovies.stream().filter(m -> apiIds.contains(m.getId())).toList());
-        } catch (DatabaseException err) {
-            createWarningAlert("Watchlist couldn't be fetched from the database. " + err.getMessage());
+        } catch (DatabaseException e) {
+            createPopup("Watchlist couldn't be fetched from the database. " + e.getMessage(), Alert.AlertType.WARNING);
         }
     }
 
@@ -135,13 +135,13 @@ public class HomeController implements Initializable {
         try {
             updateObservableList(FXCollections.observableList(movieAPI.get()));
             return;
-        } catch (MovieAPIException err) {
-            createWarningAlert(err.getMessage() + System.lineSeparator() + "Movies are loaded from local database.");
+        } catch (MovieAPIException e) {
+            createPopup(e.getMessage() + System.lineSeparator() + "Movies are loaded from local database.", Alert.AlertType.WARNING);
         }
         try {
             updateObservableList(FXCollections.observableList(MovieEntity.toMovies(movieRepository.getAllMovies())));
         } catch (DatabaseException e) {
-            createErrorAlert("Movies couldn't be fetched from the database. " + e.getMessage());
+            createPopup("Movies couldn't be fetched from the database. " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -156,20 +156,14 @@ public class HomeController implements Initializable {
             } catch (DatabaseException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to add the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
                 alert.showAndWait();
-                //TODO more exception handling?
-
-                throw new RuntimeException(e);
             }
-            //TODO delete print statements or use logging
-            //System.out.printf("HomeController: Added Movie \"%s\" to watchlist.\n", clickedItem.getItem().getTitle());
         } else {
             watchlist.remove(clickedItem.getItem());
             try {
                 watchlistRepository.removeFromWatchlist(movie.getId());
-            } catch (DatabaseException err) {
+            } catch (DatabaseException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "An error occurred while trying to delete the movie " + movie.getTitle() + "to the watchlist. PLease try again later!");
                 alert.showAndWait();
-                //TODO more exception handling?
             }
 
             //return to overview if last element of watchlist is removed.
@@ -201,8 +195,8 @@ public class HomeController implements Initializable {
         try {
             movieRepository.removeAll();
             movieRepository.addAllMovies(movies);
-        } catch (DatabaseException err) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error caching movies in the database: " + err.getMessage(), ButtonType.OK);
+        } catch (DatabaseException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error caching movies in the database: " + e.getMessage(), ButtonType.OK);
             alert.showAndWait();
         }
     }
@@ -226,8 +220,8 @@ public class HomeController implements Initializable {
 
         try {
             updateObservableList(FXCollections.observableList(movieAPI.get(urlBuilder.build())));
-        } catch (MovieAPIException err) {
-            createWarningAlert("Something went wrong while filtering: " + err.getMessage());
+        } catch (MovieAPIException e) {
+            createPopup("Something went wrong while filtering: " + e.getMessage(), Alert.AlertType.WARNING);
         }
     }
 
@@ -311,13 +305,8 @@ public class HomeController implements Initializable {
         }
     }
 
-    private void createWarningAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
-        alert.showAndWait();
-    }
-
-    private void createErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+    private void createPopup(String message, Alert.AlertType type) {
+        Alert alert = new Alert(type, message, ButtonType.OK);
         alert.showAndWait();
     }
 }

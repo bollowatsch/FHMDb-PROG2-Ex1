@@ -17,19 +17,6 @@ public class FhmdbApplication extends Application {
         stage.setTitle("FHMDb");
         stage.setScene(scene);
         stage.show();
-
-        //test database creation - just for testing
-        //TODO: delete after testing
-
-        /*
-        Database db = Database.getDatabase();
-        try {
-            db.testDB();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
-
     }
 
     public static void main(String[] args) {

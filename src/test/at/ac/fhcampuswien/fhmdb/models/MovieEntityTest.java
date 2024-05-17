@@ -20,14 +20,6 @@ public class MovieEntityTest {
     private static final MovieEntity movieEntityB = movieEntityBuilder.setId(2).setTitle("Movie 2").setDescription("Description 2").setReleaseYear(2021).setLengthInMinutes(110).setRating(8.0).build();
     private static final MovieEntity movieEntityC = movieEntityBuilder.setId(3).setTitle("Movie 3").setDescription("Description 3").setReleaseYear(2019).setLengthInMinutes(100).setRating(6.5).build();
 
-    /* TODO does not work for some reason -> initialized in class -> find a way to make @BeforeAll work with maven
-    @BeforeAll
-    public static void init() {
-        movieEntity = new MovieEntity();
-    }
-
-     */
-
     @Test
     public void test_genresToString_empty_genre_list_returns_empty_string() {
         //Arrange
