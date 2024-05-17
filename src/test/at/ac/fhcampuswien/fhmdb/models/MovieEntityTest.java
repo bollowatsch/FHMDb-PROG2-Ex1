@@ -13,12 +13,12 @@ public class MovieEntityTest {
     private static final MovieEntityBuilder movieEntityBuilder = new MovieEntityBuilder();
     private static final MovieBuilder movieBuilder = new MovieBuilder();
     private static final MovieEntity movieEntity = movieEntityBuilder.setId(99).setTitle("Dummy Movie for static methods").build();
-    private static final Movie movieA = movieBuilder.setId("1").setTitle("Movie 1").setReleaseYear(2020).setDescription("Description 1").setLengthInMinutes(120).setGenres(new ArrayList<Genre>()).setRating(7.5).build();
-    private static final Movie movieB = movieBuilder.setId("2").setTitle("Movie 2").setReleaseYear(2021).setDescription("Description 2").setLengthInMinutes(110).setGenres(new ArrayList<Genre>()).setRating(8.0).build();
-    private static final Movie movieC = movieBuilder.setId("3").setTitle("Movie 3").setReleaseYear(2029).setDescription("Description 3").setLengthInMinutes(100).setGenres(new ArrayList<Genre>()).setRating(6.5).build();
-    private static final MovieEntity movieEntityA = movieEntityBuilder.setId(1).setTitle("Movie 1").setDescription("Description 1").setReleaseYear(2020).setLengthInMinutes(120).setRating(7.5).build();
-    private static final MovieEntity movieEntityB = movieEntityBuilder.setId(2).setTitle("Movie 2").setDescription("Description 2").setReleaseYear(2021).setLengthInMinutes(110).setRating(8.0).build();
-    private static final MovieEntity movieEntityC = movieEntityBuilder.setId(3).setTitle("Movie 3").setDescription("Description 3").setReleaseYear(2019).setLengthInMinutes(100).setRating(6.5).build();
+    private static final Movie movieA = movieBuilder.setId("").setTitle("Movie 1").setReleaseYear(2020).setDescription("Description 1").setLengthInMinutes(120).setGenres(new ArrayList<Genre>()).setRating(7.5).build();
+    private static final Movie movieB = movieBuilder.setId("").setTitle("Movie 2").setReleaseYear(2021).setDescription("Description 2").setLengthInMinutes(110).setGenres(new ArrayList<Genre>()).setRating(8.0).build();
+    private static final Movie movieC = movieBuilder.setId("").setTitle("Movie 3").setReleaseYear(2029).setDescription("Description 3").setLengthInMinutes(100).setGenres(new ArrayList<Genre>()).setRating(6.5).build();
+    private static final MovieEntity movieEntityA = movieEntityBuilder.setTitle("Movie 1").setDescription("Description 1").setReleaseYear(2020).setLengthInMinutes(120).setRating(7.5).build();
+    private static final MovieEntity movieEntityB = movieEntityBuilder.setTitle("Movie 2").setDescription("Description 2").setReleaseYear(2021).setLengthInMinutes(110).setRating(8.0).build();
+    private static final MovieEntity movieEntityC = movieEntityBuilder.setTitle("Movie 3").setDescription("Description 3").setReleaseYear(2019).setLengthInMinutes(100).setRating(6.5).build();
 
     @Test
     public void test_genresToString_empty_genre_list_returns_empty_string() {
