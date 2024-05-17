@@ -75,11 +75,7 @@ public class HomeController implements Initializable {
         }
 
         //initialize observableList and sort them asc.
-        try {
-            updateObservableList(FXCollections.observableList(movieAPI.get()));   // request movies from API
-        } catch (MovieAPIException err) {
-            createErrorAlert(err.getMessage());
-        }
+        getMovies();
 
         //cache movies from API call in DB
         cacheDB(observableMovies);
@@ -98,9 +94,7 @@ public class HomeController implements Initializable {
             List<String> apiIds = watchlistRepository.getWatchlist().stream().map(WatchlistMovieEntity::getApiId).toList();
             watchlist.addAll(observableMovies.stream().filter(m -> apiIds.contains(m.getId())).toList());
         } catch (DatabaseException err) {
-            //TODO exception handling
-            // what happens, if apiId is not available in MovieAPI? -> edge case
-            throw new RuntimeException(err);
+            createWarningAlert("Watchlist couldn't be fetched from the database. " + err.getMessage());
         }
     }
 
@@ -132,13 +126,22 @@ public class HomeController implements Initializable {
             clearFields();
 
             if (state == ViewState.ALL) {
-                try {
-                    updateObservableList(FXCollections.observableList(movieAPI.get()));
-                } catch (MovieAPIException err) {
-                    createErrorAlert(err.getMessage());
-                }
+                getMovies();
             } else updateObservableList(watchlist);
         });
+    }
+
+    private void getMovies() {
+        try {
+            updateObservableList(FXCollections.observableList(movieAPI.get()));
+        } catch (MovieAPIException err) {
+            createErrorAlert(err.getMessage());
+            try {
+                updateObservableList(FXCollections.observableList(MovieEntity.toMovies(movieRepository.getAllMovies())));
+            } catch (DatabaseException e) {
+                createWarningAlert("Movies couldn't be fetched from the database. " + err.getMessage());
+            }
+        }
     }
 
     private final ClickEventHandler<MovieCell> onAddToWatchlistClicked = (clickedItem) -> {
@@ -187,11 +190,7 @@ public class HomeController implements Initializable {
 
         } else {
             //Switch to overview.
-            try {
-                updateObservableList(FXCollections.observableList(movieAPI.get()));
-            } catch (MovieAPIException err) {
-                createErrorAlert(err.getMessage());
-            }
+            getMovies();
             state = ViewState.ALL;
             switchView.setText("Watchlist");
         }

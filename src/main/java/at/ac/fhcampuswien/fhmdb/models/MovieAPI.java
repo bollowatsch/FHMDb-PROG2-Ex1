@@ -1,10 +1,5 @@
 package at.ac.fhcampuswien.fhmdb.models;
 
-import at.ac.fhcampuswien.fhmdb.database.MovieEntity;
-import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
-import at.ac.fhcampuswien.fhmdb.database.WatchlistMovieEntity;
-import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
-import at.ac.fhcampuswien.fhmdb.models.exception.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.exception.MovieAPIException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,12 +27,12 @@ public class MovieAPI {
         return instance;
     }
 
-    public List<Movie> get() throws MovieAPIException, DatabaseException {
+    public List<Movie> get() throws MovieAPIException {
         URLBuilder urlBuilder = new URLBuilder();
         return get(urlBuilder.build());
     }
 
-    public List<Movie> get(String url) throws MovieAPIException, DatabaseException {
+    public List<Movie> get(String url) throws MovieAPIException {
         Request request = new Request.Builder()
                 .url(url)
                 .header("User-Agent", "http.agent")
