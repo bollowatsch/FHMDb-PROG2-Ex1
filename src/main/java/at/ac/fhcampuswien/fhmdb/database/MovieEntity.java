@@ -115,7 +115,7 @@ public class MovieEntity {
     }
 
     public static List<MovieEntity> fromMovies(List<Movie> movies) {
-        ArrayList<MovieEntity> movieEntityList = new ArrayList<MovieEntity>();
+        ArrayList<MovieEntity> movieEntityList = new ArrayList<>();
         for (Movie movie : movies) {
             movieEntityList.add(new MovieEntity(movie));
         }
@@ -127,10 +127,10 @@ public class MovieEntity {
         ArrayList<Movie> movieList = new ArrayList<>();
 
         for (MovieEntity movieEntity : movieEntities) {
-            List<Genre> genres = new ArrayList<Genre>();
+            List<Genre> genres = new ArrayList<>();
             //BUG: Multiple Genres separated by ", " leads to crash. (Cover this with TestCases)
             for (String genre : movieEntity.getGenres().split(",")) {
-                if (!genre.equals("")) {
+                if (!genre.isEmpty()) {
                     genres.add(Genre.valueOf(genre));
                 }
             }
