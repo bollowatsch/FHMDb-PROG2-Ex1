@@ -16,4 +16,6 @@ module at.ac.fhcampuswien.fhmdb {
     exports at.ac.fhcampuswien.fhmdb.models.exception;
     exports at.ac.fhcampuswien.fhmdb.models;
     exports at.ac.fhcampuswien.fhmdb;
+    exports at.ac.fhcampuswien.fhmdb.models.statePattern;
+    opens at.ac.fhcampuswien.fhmdb.models.statePattern to com.google.gson;
 }
