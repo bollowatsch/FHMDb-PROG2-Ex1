@@ -7,6 +7,9 @@ import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.models.*;
 import at.ac.fhcampuswien.fhmdb.models.exception.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.exception.MovieAPIException;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.AscendingState;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.DescendingState;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.StateContext;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -62,6 +65,7 @@ public class HomeController implements Initializable {
 
     private WatchlistRepository watchlistRepository;
     private MovieRepository movieRepository;
+    private StateContext stateContext;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -73,6 +77,7 @@ public class HomeController implements Initializable {
             createPopup("Following error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
         }
 
+        stateContext = new StateContext();
         getMovies();                            //initialize observableList and sort them asc.
         cacheDB(observableMovies);              //cache movies from API call in DB
         updateListView(observableMovies);       // set data of observable list to list view
@@ -280,16 +285,20 @@ public class HomeController implements Initializable {
     }
 
     public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
-        observableMovies.sort(Comparator.comparing(Movie::getTitle));
+        //observableMovies.sort(Comparator.comparing(Movie::getTitle));
+        //return observableMovies;
+        stateContext.setState(new AscendingState());
         setSortBtnText("Sort ↑");
-        return observableMovies;
+        return stateContext.sort(observableMovies);
     }
 
     public ObservableList<Movie> sortDescendingByTitle(ObservableList<Movie> observableMovies) {
-        observableMovies.sort(Comparator.comparing(Movie::getTitle));
-        Collections.reverse(observableMovies);
+        //observableMovies.sort(Comparator.comparing(Movie::getTitle));
+        //Collections.reverse(observableMovies);
+        //return observableMovies;
+        stateContext.setState(new DescendingState());
         setSortBtnText("Sort ↓");
-        return observableMovies;
+        return stateContext.sort(observableMovies);
     }
 
     public void setSortBtnText(String text) {
