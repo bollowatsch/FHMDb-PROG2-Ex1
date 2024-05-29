@@ -7,6 +7,7 @@ import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
 import at.ac.fhcampuswien.fhmdb.models.*;
 import at.ac.fhcampuswien.fhmdb.models.exception.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.exception.MovieAPIException;
+import at.ac.fhcampuswien.fhmdb.models.observerPattern.Observer;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.AscendingState;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.DescendingState;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.StateContext;
@@ -29,7 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class HomeController implements Initializable {
+public class HomeController implements Initializable, Observer {
     @FXML
     public JFXButton filterBtn;
 
@@ -70,6 +71,7 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //initialize movie DB
+
         try {
             movieAPI = MovieAPI.getMovieAPI();
             movieRepository = new MovieRepository();
@@ -86,6 +88,7 @@ public class HomeController implements Initializable {
         //initialize Watchlist
         try {
             watchlistRepository = new WatchlistRepository();
+            watchlistRepository.addObserver(this);
         } catch (DatabaseException e) {
             createPopup(e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -149,9 +152,10 @@ public class HomeController implements Initializable {
         Movie movie = clickedItem.getItem();
         WatchlistMovieEntity watchlistMovie = new WatchlistMovieEntity(movie.getId());
         if (state == ViewState.ALL) {
-            if (watchlist.contains(clickedItem.getItem())) return;
+            if (!watchlist.contains(movie)) {
+                watchlist.add(movie);
+            }
 
-            watchlist.add(clickedItem.getItem());
             try {
                 watchlistRepository.addToWatchlist(watchlistMovie);
             } catch (DatabaseException e) {
@@ -310,5 +314,10 @@ public class HomeController implements Initializable {
     private void createPopup(String message, Alert.AlertType type) {
         Alert alert = new Alert(type, message, ButtonType.OK);
         alert.showAndWait();
+    }
+
+    @Override
+    public void update(String message) {
+        createPopup(message, Alert.AlertType.INFORMATION);
     }
 }
