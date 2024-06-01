@@ -74,7 +74,7 @@ public class HomeController implements Initializable, Observer {
 
         try {
             movieAPI = MovieAPI.getMovieAPI();
-            movieRepository = new MovieRepository();
+            movieRepository = MovieRepository.getMovieRepository();
         } catch (DatabaseException | MovieAPIException e) {
             createPopup("Following error occurred: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -87,7 +87,7 @@ public class HomeController implements Initializable, Observer {
 
         //initialize Watchlist
         try {
-            watchlistRepository = new WatchlistRepository();
+            watchlistRepository = WatchlistRepository.getWatchlistRepositoryInstance();
             watchlistRepository.addObserver(this);
         } catch (DatabaseException e) {
             createPopup(e.getMessage(), Alert.AlertType.ERROR);

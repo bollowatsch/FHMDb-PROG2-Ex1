@@ -13,10 +13,18 @@ import java.util.List;
 public class WatchlistRepository implements Observable {
     List<Observer> observers;
     Dao<WatchlistMovieEntity, Long> dao;
+    private static WatchlistRepository instance;
 
-    public WatchlistRepository() throws DatabaseException {
+    private WatchlistRepository() throws DatabaseException {
         this.dao = Database.getDatabase().getWatchlistDao();
         this.observers = new ArrayList<>();
+    }
+
+    public static WatchlistRepository getWatchlistRepositoryInstance() throws DatabaseException {
+        if (instance == null) {
+            instance = new WatchlistRepository();
+        }
+        return instance;
     }
 
     public List<WatchlistMovieEntity> getWatchlist() throws DatabaseException {
