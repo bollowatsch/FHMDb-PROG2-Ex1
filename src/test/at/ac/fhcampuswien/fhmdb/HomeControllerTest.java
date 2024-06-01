@@ -3,6 +3,10 @@ package at.ac.fhcampuswien.fhmdb;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.MovieBuilder;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.AscendingState;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.DescendingState;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.SortingState;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.UnsortedState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
@@ -17,15 +21,18 @@ public class HomeControllerTest {
     private static final HomeControllerFactory homeControllerFactory = new HomeControllerFactory();
     private static final HomeController hc = homeControllerFactory.getHomeController();
     private static final MovieBuilder mb = new MovieBuilder();
+    private SortingState sortingState;
 
     @Test
     public void test_sort_empty_MovieList_returns_empty_List() {
         // Arrange
+        sortingState = new UnsortedState();
+
         ObservableList<Movie> movieObservableList = FXCollections.observableArrayList();
         ObservableList<Movie> expected = FXCollections.observableArrayList();
 
         // Act
-        ObservableList<Movie> actual = hc.sortAscendingByTitle(movieObservableList);
+        ObservableList<Movie> actual = sortingState.sort(movieObservableList);
 
         // Assert
         assertEquals(actual, expected);
@@ -34,6 +41,8 @@ public class HomeControllerTest {
     @Test
     public void test_sort_multiple_values_MovieList_ascending() {
         // Arrange
+        sortingState = new AscendingState();
+
         ObservableList<Movie> movies = FXCollections.observableArrayList(
                 mb.setId("0").setTitle("A").build(),
                 mb.setId("2").setTitle("C").build(),
@@ -44,7 +53,7 @@ public class HomeControllerTest {
                 mb.setId("2").setTitle("C").build());
 
         // Act
-        ObservableList<Movie> actual = hc.sortAscendingByTitle(movies);
+        ObservableList<Movie> actual = sortingState.sort(movies);
 
         // Assert
         assertEquals(actual, expected);
@@ -53,6 +62,8 @@ public class HomeControllerTest {
     @Test
     public void test_sort_multiple_values_MovieList_descending() {
         // Arrange
+        sortingState = new DescendingState();
+
         ObservableList<Movie> movies = FXCollections.observableArrayList(
                 mb.setId("0").setTitle("A").build(),
                 mb.setId("2").setTitle("C").build(),
@@ -63,7 +74,7 @@ public class HomeControllerTest {
                 mb.setId("0").setTitle("A").build());
 
         // Act
-        ObservableList<Movie> actual = hc.sortDescendingByTitle(movies);
+        ObservableList<Movie> actual = sortingState.sort(movies);
 
         // Assert
         assertEquals(actual, expected);
@@ -72,11 +83,12 @@ public class HomeControllerTest {
     @Test
     public void test_sort_single_value_MovieList_ascending_returns_single_value_list() {
         // Arrange
+        sortingState = new AscendingState();
         ObservableList<Movie> movies = FXCollections.observableArrayList(mb.setId("0").setTitle("B").build());
         ObservableList<Movie> expected = FXCollections.observableArrayList(mb.setId("0").setTitle("B").build());
 
         // Act
-        ObservableList<Movie> actual = hc.sortAscendingByTitle(movies);
+        ObservableList<Movie> actual = sortingState.sort(movies);
 
         // Assert
         assertEquals(actual, expected);
@@ -85,11 +97,12 @@ public class HomeControllerTest {
     @Test
     public void test_sort_single_value_MovieList_descending_returns_single_value_list() {
         // Arrange
+        sortingState = new DescendingState();
         ObservableList<Movie> movies = FXCollections.observableArrayList(mb.setId("0").setTitle("A").build());
         ObservableList<Movie> expected = FXCollections.observableArrayList(mb.setId("0").setTitle("A").build());
 
         // Act
-        ObservableList<Movie> actual = hc.sortDescendingByTitle(movies);
+        ObservableList<Movie> actual = sortingState.sort(movies);
 
         // Assert
         assertEquals(actual, expected);

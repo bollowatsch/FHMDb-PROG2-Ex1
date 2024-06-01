@@ -11,6 +11,7 @@ import at.ac.fhcampuswien.fhmdb.models.observerPattern.Observer;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.AscendingState;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.DescendingState;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.StateContext;
+import at.ac.fhcampuswien.fhmdb.models.statePattern.UnsortedState;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -80,7 +81,7 @@ public class HomeController implements Initializable, Observer {
         }
 
         stateContext = new StateContext();
-        getMovies();                            //initialize observableList and sort them asc.
+        getMovies();                            //initialize observableList
         cacheDB(observableMovies);              //cache movies from API call in DB
         updateListView(observableMovies);       // set data of observable list to list view
         initializeComponents();
@@ -137,6 +138,8 @@ public class HomeController implements Initializable, Observer {
     private void getMovies() {
         try {
             updateObservableList(FXCollections.observableList(movieAPI.get()));
+            stateContext.setState(new UnsortedState());
+            stateContext.sort(observableMovies);            //in beginning movies are not sorted
             return;
         } catch (MovieAPIException e) {
             createPopup(e.getMessage() + System.lineSeparator() + "Movies are loaded from local database.", Alert.AlertType.WARNING);
