@@ -24,12 +24,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import at.ac.fhcampuswien.fhmdb.ui.PopUp;
 
 import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static at.ac.fhcampuswien.fhmdb.ui.PopUp.createPopup;
 
 public class HomeController implements Initializable, Observer {
     @FXML
@@ -312,11 +315,6 @@ public class HomeController implements Initializable, Observer {
         if (sortBtn != null) {
             sortBtn.setText(text);
         }
-    }
-
-    private void createPopup(String message, Alert.AlertType type) {
-        Alert alert = new Alert(type, message, ButtonType.OK);
-        alert.showAndWait();
     }
 
     @Override

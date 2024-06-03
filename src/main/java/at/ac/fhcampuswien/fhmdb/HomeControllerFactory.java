@@ -14,7 +14,6 @@ public class HomeControllerFactory implements Callback<Class<?>, Object> {
     }
     @Override
     public Object call(Class<?> aClass) {
-        // TODO: check if MyCtrl is already instantiated t
         try {
             return getHomeController();
         } catch (Exception e) {
