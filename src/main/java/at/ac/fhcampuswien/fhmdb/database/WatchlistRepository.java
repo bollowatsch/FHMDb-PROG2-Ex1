@@ -38,6 +38,7 @@ public class WatchlistRepository implements Observable {
 
     public void addToWatchlist(WatchlistMovieEntity movie) throws DatabaseException {
         List<WatchlistMovieEntity> list = getWatchlist();
+        //list.contains(movie);
 
         boolean found = false;
         for(WatchlistMovieEntity wme : list) {

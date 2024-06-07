@@ -11,4 +11,14 @@ public class AscendingState implements SortingState{
         movies.sort(Comparator.comparing(Movie::getTitle));
         return movies;
     }
+
+    @Override
+    public SortingState getNextState() {
+        return new DescendingState();
+    }
+
+    @Override
+    public String getText() {
+        return "Sort ↑";
+    }
 }

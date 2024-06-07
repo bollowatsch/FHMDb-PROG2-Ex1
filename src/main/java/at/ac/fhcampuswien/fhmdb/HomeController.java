@@ -21,10 +21,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
-import at.ac.fhcampuswien.fhmdb.ui.PopUp;
 
 import java.net.URL;
 import java.util.*;
@@ -122,12 +120,18 @@ public class HomeController implements Initializable, Observer {
         searchField.setOnAction(actionEvent -> filter());
 
         filterBtn.setOnAction(actionEvent -> filter());
+        setSortBtnText(stateContext.getCurrentState().getText());
         sortBtn.setOnAction(actionEvent -> {
+
+            observableMovies = sortByTitle(observableMovies);
+            /*
             if (sortBtn.getText().equals("Sort ↓")) {
                 observableMovies = sortAscendingByTitle(observableMovies);
             } else {
                 observableMovies = sortDescendingByTitle(observableMovies);
             }
+
+             */
         });
         clearBtn.setOnAction(actionEvent -> {
             clearFields();
@@ -136,6 +140,15 @@ public class HomeController implements Initializable, Observer {
                 getMovies();
             } else updateObservableList(watchlist);
         });
+    }
+
+    public ObservableList<Movie> sortByTitle(ObservableList<Movie> observableMovies) {
+        ObservableList<Movie> moviesSorted = stateContext.sort(observableMovies);
+
+        stateContext.setState(stateContext.getCurrentState().getNextState());
+        setSortBtnText(stateContext.getCurrentState().getText());
+
+        return moviesSorted;
     }
 
     private void getMovies() {
@@ -254,7 +267,7 @@ public class HomeController implements Initializable, Observer {
     private void updateObservableList(ObservableList<Movie> movies) {
         observableMovies.clear();
         observableMovies.addAll(movies);
-        observableMovies = sortAscendingByTitle(observableMovies);
+        observableMovies = sortByTitle(observableMovies);
     }
 
     private void updateListView(ObservableList<Movie> movies) {
@@ -294,27 +307,8 @@ public class HomeController implements Initializable, Observer {
         return FXCollections.observableList(movies.stream().filter(movie -> movie.getRating() >= ratingFrom).collect(Collectors.toList()));
     }
 
-    public ObservableList<Movie> sortAscendingByTitle(ObservableList<Movie> observableMovies) {
-        //observableMovies.sort(Comparator.comparing(Movie::getTitle));
-        //return observableMovies;
-        stateContext.setState(new AscendingState());
-        setSortBtnText("Sort ↑");
-        return stateContext.sort(observableMovies);
-    }
-
-    public ObservableList<Movie> sortDescendingByTitle(ObservableList<Movie> observableMovies) {
-        //observableMovies.sort(Comparator.comparing(Movie::getTitle));
-        //Collections.reverse(observableMovies);
-        //return observableMovies;
-        stateContext.setState(new DescendingState());
-        setSortBtnText("Sort ↓");
-        return stateContext.sort(observableMovies);
-    }
-
     public void setSortBtnText(String text) {
-        if (sortBtn != null) {
-            sortBtn.setText(text);
-        }
+        if (sortBtn != null) {sortBtn.setText(text);}
     }
 
     @Override

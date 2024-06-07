@@ -23,4 +23,8 @@ public class StateContext {
         return this.currentState;
     }
 
+    public SortingState getNextState() {
+        return this.currentState.getNextState();
+    }
+
 }

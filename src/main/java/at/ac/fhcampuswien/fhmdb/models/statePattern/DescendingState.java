@@ -13,4 +13,14 @@ public class DescendingState implements SortingState{
         Collections.reverse(movies);
         return movies;
     }
+
+    @Override
+    public SortingState getNextState() {
+        return new AscendingState();
+    }
+
+    @Override
+    public String getText() {
+        return "Sort ↓";
+    }
 }

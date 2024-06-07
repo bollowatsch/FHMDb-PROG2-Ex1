@@ -8,4 +8,14 @@ public class UnsortedState implements SortingState{
     public ObservableList<Movie> sort(ObservableList<Movie> movies) {
         return movies;
     }
+
+    @Override
+    public SortingState getNextState() {
+        return new AscendingState();
+    }
+
+    @Override
+    public String getText() {
+        return "Sort -";
+    }
 }

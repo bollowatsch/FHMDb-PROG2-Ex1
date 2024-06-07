@@ -34,6 +34,7 @@ public class MovieBuilder {
     public MovieBuilder(){
         reset();
     }
+
     public Movie build() {
         if (id == null) throw new IllegalStateException("No ID was set!");
         if (title == null) throw new IllegalStateException("No Title was set!");
