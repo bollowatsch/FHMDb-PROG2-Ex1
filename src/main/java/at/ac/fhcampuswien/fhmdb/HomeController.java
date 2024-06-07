@@ -8,8 +8,6 @@ import at.ac.fhcampuswien.fhmdb.models.*;
 import at.ac.fhcampuswien.fhmdb.models.exception.DatabaseException;
 import at.ac.fhcampuswien.fhmdb.models.exception.MovieAPIException;
 import at.ac.fhcampuswien.fhmdb.models.observerPattern.Observer;
-import at.ac.fhcampuswien.fhmdb.models.statePattern.AscendingState;
-import at.ac.fhcampuswien.fhmdb.models.statePattern.DescendingState;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.StateContext;
 import at.ac.fhcampuswien.fhmdb.models.statePattern.UnsortedState;
 import at.ac.fhcampuswien.fhmdb.ui.MovieCell;

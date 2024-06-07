@@ -18,8 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HomeControllerTest {
-    private static final HomeControllerFactory homeControllerFactory = new HomeControllerFactory();
-    private static final HomeController hc = homeControllerFactory.getHomeController();
+    private static final HomeController hc = HomeControllerFactory.getHomeController();
     private static final MovieBuilder mb = new MovieBuilder();
     private SortingState sortingState;
 

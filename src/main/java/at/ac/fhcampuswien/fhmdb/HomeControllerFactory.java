@@ -5,7 +5,7 @@ import javafx.util.Callback;
 public class HomeControllerFactory implements Callback<Class<?>, Object> {
     private static HomeController instance;
 
-    public HomeController getHomeController() {
+    public static HomeController getHomeController() {
         if (instance == null) {
             instance = new HomeController();
         }
